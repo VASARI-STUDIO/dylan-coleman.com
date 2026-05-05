@@ -1,17 +1,6 @@
-"use client";
-
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+// Dark-only design — theme provider is a passthrough kept for import compatibility.
 import type { ReactNode } from "react";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem={false}
-      disableTransitionOnChange
-    >
-      {children}
-    </NextThemesProvider>
-  );
+  return <>{children}</>;
 }

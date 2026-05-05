@@ -11,11 +11,11 @@ export function IndustryTag({
   return (
     <span
       className={clsx(
-        "smallcaps inline-flex items-center gap-2 text-muted",
+        "smallcaps inline-flex items-center gap-2 text-muted-foreground",
         className,
       )}
     >
-      <span aria-hidden className="block h-px w-6 bg-rule" />
+      <span aria-hidden className="block h-px w-6 bg-border" />
       {industry(k).short}
     </span>
   );

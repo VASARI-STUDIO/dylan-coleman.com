@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { display, sans } from "@/lib/fonts";
-import { ThemeProvider } from "@/components/theme-provider";
+import { sans, serif } from "@/lib/fonts";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
@@ -31,15 +30,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${sans.variable}`}
+      className={`dark ${sans.variable} ${serif.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-paper text-ink antialiased">
-        <ThemeProvider>
-          <Nav />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProvider>
+      <body className="bg-background text-foreground antialiased">
+        <Nav />
+        <main className="pt-20">{children}</main>
+        <Footer />
       </body>
     </html>
   );

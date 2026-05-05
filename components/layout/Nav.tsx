@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Wordmark } from "./Wordmark";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Instagram, Linkedin, Twitter } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 const links = [
   { label: "Work", href: "/#work" },
@@ -10,28 +10,57 @@ const links = [
   { label: "Contact", href: "/#contact" },
 ];
 
+const socials = [
+  { label: "Instagram", href: "https://instagram.com", Icon: Instagram },
+  { label: "LinkedIn", href: "https://linkedin.com", Icon: Linkedin },
+  { label: "Twitter", href: "https://twitter.com", Icon: Twitter },
+];
+
 export function Nav() {
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/80 backdrop-blur supports-[backdrop-filter]:bg-paper/70">
-      <div className="mx-auto flex h-14 max-w-page items-center justify-between px-6 md:px-10">
-        <Link href="/" className="shrink-0">
-          <Wordmark />
+    <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-20 py-4">
+      <div className="mx-auto flex max-w-page items-center justify-between gap-6">
+        {/* Brand */}
+        <Link href="/" className="flex items-center gap-3 shrink-0">
+          <Logo size={28} />
+          <span className="font-sans font-semibold text-[1rem] tracking-[-0.01em]">
+            Dylan Coleman
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="smallcaps text-ink/70 transition hover:text-ink"
-            >
-              {link.label}
-            </Link>
+        {/* Center links — dot-separated */}
+        <nav className="hidden md:flex items-center gap-2 text-sm">
+          {links.map((l, i) => (
+            <span key={l.href} className="flex items-center gap-2">
+              <Link
+                href={l.href}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {l.label}
+              </Link>
+              {i < links.length - 1 && (
+                <span aria-hidden className="text-muted-foreground/50">
+                  •
+                </span>
+              )}
+            </span>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
+        {/* Socials */}
+        <div className="flex items-center gap-2">
+          {socials.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="liquid-glass grid h-10 w-10 place-items-center rounded-full text-foreground/80 hover:text-foreground transition-colors"
+            >
+              <Icon className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+          ))}
         </div>
       </div>
     </header>

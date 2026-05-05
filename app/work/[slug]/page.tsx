@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CaseStudyShell } from "@/components/case-study/CaseStudyShell";
-import { editorialMDX } from "@/components/case-study/mdx-elements";
 import { HERO_WORK } from "@/content/work/_recent";
 
-// Statically generated case study route. Each MDX file becomes a page.
+// Statically generated case study route — fully data-driven, no MDX import needed.
 export function generateStaticParams() {
   return HERO_WORK.map((w) => ({ slug: w.slug }));
 }
@@ -40,19 +39,5 @@ export default async function CaseStudyPage({
   // Pick the "next" hero study (the other one).
   const next = HERO_WORK.find((w) => w.slug !== slug);
 
-  let MDXContent: React.ComponentType<{ components?: Record<string, unknown> }>;
-  let mdxMeta: { role?: string; scope?: string[] } = {};
-  try {
-    const mod = await import(`@/content/work/${slug}.mdx`);
-    MDXContent = mod.default;
-    mdxMeta = mod.meta ?? {};
-  } catch {
-    notFound();
-  }
-
-  return (
-    <CaseStudyShell meta={{ ...item, ...mdxMeta }} next={next}>
-      <MDXContent components={editorialMDX} />
-    </CaseStudyShell>
-  );
+  return <CaseStudyShell meta={item} next={next} />;
 }

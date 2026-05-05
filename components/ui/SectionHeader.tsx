@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import type { ReactNode } from "react";
 
 export function SectionHeader({
   index,
@@ -8,23 +9,25 @@ export function SectionHeader({
   className,
 }: {
   index: string; // e.g. "01"
-  label: string; // e.g. "Selected Work"
-  title: string;
+  label: string;
+  title: ReactNode; // accept JSX so callers can italicize accent words
   intro?: string;
   className?: string;
 }) {
   return (
     <header className={clsx("grid gap-8 md:grid-cols-12", className)}>
       <div className="md:col-span-3 flex items-start gap-4">
-        <span className="smallcaps text-muted">{index}</span>
-        <span className="smallcaps text-muted">{label}</span>
+        <span className="smallcaps">{index}</span>
+        <span className="smallcaps">{label}</span>
       </div>
       <div className="md:col-span-9">
-        <h2 className="font-display text-h2 leading-[1.02] tracking-[-0.02em] max-w-[20ch]">
+        <h2 className="font-sans text-h2 font-medium tight-tracking max-w-[20ch]">
           {title}
         </h2>
         {intro && (
-          <p className="mt-6 max-w-prose text-body-lg text-ink/80">{intro}</p>
+          <p className="mt-6 max-w-prose text-body-lg text-muted-foreground">
+            {intro}
+          </p>
         )}
       </div>
     </header>
