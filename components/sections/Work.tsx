@@ -16,12 +16,11 @@ export function Work() {
             label="Selected Work"
             title={
               <>
-                A small body of work, sold as a{" "}
-                <span className="serif-italic">product</span> to the audience it
-                serves.
+                A small body of work — each grown around a{" "}
+                <span className="serif-italic">specific</span> audience.
               </>
             }
-            intro="Each engagement is positioned for a specific industry — so the right clients see themselves in the work, and the rest move on."
+            intro="Every project is positioned for a single industry. So the right clients see themselves in the work, and the rest move on."
           />
         </FadeUp>
 

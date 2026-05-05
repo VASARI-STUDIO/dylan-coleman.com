@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { Logo } from "@/components/ui/Logo";
+import { HillsScene } from "@/components/sections/HillsScene";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 20 },
@@ -12,52 +12,36 @@ const fade = (delay: number) => ({
 
 export function Hero() {
   return (
-    <section className="relative min-h-[88vh] overflow-hidden">
-      {/* Subtle radial vignette behind the content — reads as monochrome depth without imagery */}
+    <section className="relative min-h-screen overflow-hidden">
+      {/* Parallax hills + scroll-driven flower bloom (no sky — just hills against the dark theme) */}
+      <HillsScene />
+
+      {/* Soft top-down vignette behind the headline so the type sits crisply against the scene */}
       <div
         aria-hidden
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(60% 80% at 50% 30%, rgba(255,255,255,0.06), rgba(0,0,0,0) 60%)",
-        }}
-      />
-      {/* Bottom fade-to-black for the gradient hero treatment */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background to-transparent"
+        className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-background/80 via-background/30 to-transparent"
       />
 
-      <div className="relative z-10 mx-auto flex max-w-page flex-col items-center px-6 md:px-12 pt-28 md:pt-40 pb-32 md:pb-48 text-center">
-        {/* Trust pill */}
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-page flex-col items-center px-6 md:px-12 pt-28 md:pt-36 pb-32 md:pb-44 text-center">
+        {/* Identity pill — name + role surfaced first */}
         <motion.div
           {...fade(0)}
           className="liquid-glass flex items-center gap-3 rounded-full px-4 py-2 text-sm"
         >
-          <div className="flex -space-x-2">
-            {[1, 2, 3].map((i) => (
-              <span
-                key={i}
-                aria-hidden
-                className="grid h-7 w-7 place-items-center rounded-full border-2 border-background bg-card"
-              >
-                <Logo size={14} outerClass="border-foreground/40" innerClass="border-foreground/40" />
-              </span>
-            ))}
-          </div>
+          <span aria-hidden className="block h-1.5 w-1.5 rounded-full bg-foreground/80" />
           <span className="text-muted-foreground">
-            Trusted by 45+ brands · Booking late-2026
+            <span className="text-foreground">Dylan Coleman</span>
+            &nbsp;·&nbsp;Designer &amp; Developer
           </span>
         </motion.div>
 
         {/* Display headline */}
         <motion.h1
           {...fade(0.1)}
-          className="mt-10 max-w-[18ch] font-sans text-display font-medium tight-tracking"
+          className="mt-10 max-w-[16ch] font-sans text-display font-medium tight-tracking"
         >
-          Considered design,
-          <br />
-          built like <span className="serif-italic">architecture.</span>
+          Helping brands{" "}
+          <span className="serif-italic">flourish.</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -66,15 +50,15 @@ export function Hero() {
           className="mt-8 max-w-2xl text-lg leading-relaxed"
           style={{ color: "hsl(var(--hero-subtitle))" }}
         >
-          Premium digital identities for ambitious brands — designed and built
-          by Dylan Coleman. Each project is shaped around the audience it&apos;s
-          meant to convert.
+          I build premium digital identities for ambitious brands — the kind of
+          website that earns trust at first glance, and gets out of the way once
+          it has it.
         </motion.p>
 
-        {/* CTA pill — liquid glass shell with primary action */}
+        {/* CTA pill — start a conversation */}
         <motion.form
           {...fade(0.3)}
-          action="/#contact"
+          action="#contact"
           method="get"
           className="liquid-glass mt-12 flex w-full max-w-lg items-center gap-2 rounded-full p-2"
           onSubmit={(e) => {
@@ -88,10 +72,16 @@ export function Hero() {
             className="flex-1 bg-transparent px-5 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
             aria-label="Your email"
           />
-          <Button variant="solid" className="!h-10 !px-6 text-xs uppercase tracking-[0.18em]">
+          <Button
+            variant="solid"
+            className="!h-10 !px-6 text-xs uppercase tracking-[0.18em]"
+          >
             Inquire
           </Button>
         </motion.form>
+
+        {/* Spacer to push spec strip to the bottom of the viewport */}
+        <div className="flex-1" />
 
         {/* Spec strip */}
         <motion.dl
@@ -100,19 +90,19 @@ export function Hero() {
         >
           <div>
             <dt className="smallcaps">Discipline</dt>
-            <dd className="mt-1 text-foreground">Brand · Web · Editorial</dd>
+            <dd className="mt-1 text-foreground">Brand &amp; Web</dd>
           </div>
           <div>
             <dt className="smallcaps">Based</dt>
             <dd className="mt-1 text-foreground">United States · Remote</dd>
           </div>
           <div>
-            <dt className="smallcaps">Index</dt>
-            <dd className="mt-1 text-foreground">VOL.&nbsp;01 · 2026</dd>
+            <dt className="smallcaps">Working with</dt>
+            <dd className="mt-1 text-foreground">Founders &amp; Studios</dd>
           </div>
           <div>
             <dt className="smallcaps">Status</dt>
-            <dd className="mt-1 text-foreground">Booking late-2026</dd>
+            <dd className="mt-1 text-foreground">Booking late 2026</dd>
           </div>
         </motion.dl>
       </div>

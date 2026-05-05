@@ -16,12 +16,11 @@ export function Shop() {
             label="The Shop"
             title={
               <>
-                Considered{" "}
-                <span className="serif-italic">templates</span> and digital
-                products — built to the same standard as commissioned work.
+                Templates,{" "}
+                <span className="serif-italic">considered.</span>
               </>
             }
-            intro="A small, growing shelf of templates for people who want a premium starting point without a custom build."
+            intro="A small, growing shelf of premium digital products — built to the same standard as the commissioned work. For people who want a high-end starting point without commissioning one."
           />
         </FadeUp>
 

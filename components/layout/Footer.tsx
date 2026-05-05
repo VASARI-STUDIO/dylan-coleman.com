@@ -14,7 +14,7 @@ export function Footer() {
       <div className="mx-auto max-w-page px-6 md:px-12 py-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <Logo size={20} />
-          <span>© {year} Dylan Coleman. All rights reserved.</span>
+          <span>© {year} Dylan Coleman · Designed and built in-house</span>
         </div>
         <ul className="flex items-center gap-6 text-sm text-muted-foreground">
           {links.map((l) => (

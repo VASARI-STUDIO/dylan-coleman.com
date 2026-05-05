@@ -14,7 +14,7 @@ const principles = [
   {
     n: "01",
     t: "Audience first",
-    b: "Every project starts with the person it's meant to convert. Design follows.",
+    b: "Every project starts with the person it's meant to win over. Design follows.",
   },
   {
     n: "02",
@@ -38,8 +38,8 @@ export function About() {
             label="About"
             title={
               <>
-                A studio of one. Meticulous by default, fast by{" "}
-                <span className="serif-italic">design.</span>
+                A studio of one — patient by{" "}
+                <span className="serif-italic">practice,</span> fast by design.
               </>
             }
           />
@@ -59,16 +59,16 @@ export function About() {
             {/* Scroll-driven word reveal */}
             <ScrollRevealParagraph
               className="font-sans text-2xl md:text-3xl font-medium tight-tracking max-w-prose"
-              text="I started building websites at seventeen. What began as a freelance habit became a discipline — and a quiet conviction that the best digital work feels less like marketing, and more like architecture."
-              highlight={["discipline", "architecture", "conviction"]}
+              text="I started building websites at seventeen. What began as a freelance habit grew into a practice — built on a quiet conviction that the best digital work feels less like marketing, and more like architecture: planned, patient, made to last."
+              highlight={["practice", "architecture", "patient"]}
             />
 
             <FadeUp delay={0.1}>
               <p className="mt-8 max-w-prose text-body text-muted-foreground">
-                I work with a small number of clients each year, mostly on brand
-                websites and launches where the design and the code matter
-                equally. The result is meant to feel inevitable — the only way
-                the brand could have been built.
+                I work with a small number of clients each year — mostly on
+                brand websites and product launches where the design and the
+                code matter equally. The result is meant to feel inevitable: the
+                only way the brand could have been built.
               </p>
             </FadeUp>
 

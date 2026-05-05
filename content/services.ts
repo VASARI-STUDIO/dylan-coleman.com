@@ -14,14 +14,14 @@ export const SERVICES: Service[] = [
     index: "S/01",
     title: "Brand Websites",
     tagline:
-      "A full digital presence — designed, built, and tuned to convert. For businesses ready to be taken seriously.",
+      "A full digital presence — designed, built, and tuned to earn trust. For brands ready to be taken seriously.",
     scope: [
       "Discovery, audience & positioning",
       "Visual identity moments — type, color, motion",
       "Custom design across every page and breakpoint",
       "Performance-tuned build on Next.js",
       "On-page SEO and analytics",
-      "Launch support",
+      "Launch support and a 30-day warranty",
     ],
     priceRange: "$6k – $18k",
     timeline: "4 – 8 weeks",
@@ -34,8 +34,8 @@ export const SERVICES: Service[] = [
       "A single page, sharpened for one outcome. For launches, campaigns, and waitlists where every word and frame counts.",
     scope: [
       "Messaging hierarchy & one clear conversion path",
-      "Custom design + editorial layout",
-      "Performance build with motion where it earns its place",
+      "Custom design and editorial layout",
+      "Build with motion where it earns its place",
       "Form, payment or booking integration",
       "A/B-ready architecture",
     ],

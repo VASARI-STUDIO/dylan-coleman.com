@@ -19,7 +19,7 @@ export const SHOP: ShopItem[] = [
     index: "T/01",
     title: "Editorial — A Premium Brand Template",
     blurb:
-      "An editorial Framer template for studios and creative-led businesses. Considered typography, generous whitespace, and a calm, confident voice.",
+      "An editorial Framer template for studios and creative-led businesses. Considered typography, generous whitespace, and a calm confident voice — ready to make your own.",
     audience: "creative-brand",
     platform: "Framer",
     price: "From $79",

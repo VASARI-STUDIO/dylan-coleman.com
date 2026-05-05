@@ -74,15 +74,14 @@ export function Contact() {
         <FadeUp>
           <SectionHeader
             index="05"
-            label="Make Contact"
+            label="Plant a Seed"
             title={
               <>
-                A short form for{" "}
-                <span className="serif-italic">serious</span> inquiries — or a
-                direct line if you prefer.
+                Tell me what you&apos;re{" "}
+                <span className="serif-italic">growing.</span>
               </>
             }
-            intro="Send me a few details and I'll get back within two business days. The more you tell me up front, the faster we move."
+            intro="A short form for serious inquiries — or a direct line if you prefer. The more you tell me up front, the faster we move."
           />
         </FadeUp>
 
