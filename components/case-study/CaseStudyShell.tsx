@@ -3,6 +3,7 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Rule } from "@/components/ui/Rule";
 import { IndustryTag } from "@/components/ui/IndustryTag";
 import { FadeUp } from "@/components/ui/FadeUp";
+import { asset } from "@/lib/asset";
 import type { WorkItem, GalleryImage } from "@/content/work/_recent";
 
 const ratioClass: Record<NonNullable<GalleryImage["ratio"]>, string> = {
@@ -15,10 +16,19 @@ const ratioClass: Record<NonNullable<GalleryImage["ratio"]>, string> = {
 function ImageSlot({ img }: { img: GalleryImage }) {
   const ratio = ratioClass[img.ratio ?? "landscape"];
   return (
-    <figure className={`w-full ${ratio} bg-card overflow-hidden`}>
-      <div className="grid h-full place-items-center text-muted-foreground">
-        <span className="smallcaps">{img.alt}</span>
-      </div>
+    <figure className={`relative w-full ${ratio} bg-card overflow-hidden`}>
+      {img.src ? (
+        <img
+          src={asset(img.src)}
+          alt={img.alt}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <div className="grid h-full place-items-center text-muted-foreground">
+          <span className="smallcaps">{img.alt}</span>
+        </div>
+      )}
     </figure>
   );
 }
@@ -49,10 +59,18 @@ export function CaseStudyShell({
       {/* Full-bleed hero image */}
       <div className="mt-10 md:mt-16">
         <FadeUp>
-          <div className="aspect-[21/10] w-full bg-card overflow-hidden">
-            <div className="grid h-full place-items-center text-muted-foreground">
-              <span className="smallcaps">{meta.index} · hero</span>
-            </div>
+          <div className="relative aspect-[21/10] w-full bg-card overflow-hidden">
+            {meta.hero ? (
+              <img
+                src={asset(meta.hero)}
+                alt={meta.title}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <div className="grid h-full place-items-center text-muted-foreground">
+                <span className="smallcaps">{meta.index} · hero</span>
+              </div>
+            )}
           </div>
         </FadeUp>
       </div>

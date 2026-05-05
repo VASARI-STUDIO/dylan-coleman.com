@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { sans, serif } from "@/lib/fonts";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,6 +35,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-background text-foreground antialiased">
+        <SmoothScroll />
         <Nav />
         <main className="pt-20">{children}</main>
         <Footer />

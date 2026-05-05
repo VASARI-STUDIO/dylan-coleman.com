@@ -2,6 +2,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { ScrollRevealParagraph } from "@/components/ui/ScrollReveal";
+import { asset } from "@/lib/asset";
 
 const stats = [
   { k: "Practicing", v: "5+ years" },
@@ -47,11 +48,13 @@ export function About() {
 
         <div className="mt-16 grid gap-12 md:grid-cols-12">
           <FadeUp className="md:col-span-5" delay={0.1}>
-            {/* Portrait slot */}
-            <div className="aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl bg-card">
-              <div className="grid h-full place-items-center text-muted-foreground">
-                <span className="smallcaps">Portrait · /public/portrait.jpg</span>
-              </div>
+            <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl bg-card">
+              <img
+                src={asset("/about/portrait.jpg")}
+                alt="Dylan Coleman"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             </div>
           </FadeUp>
 

@@ -1,7 +1,7 @@
 import type { IndustryKey } from "@/lib/industries";
 
 export type GalleryImage = {
-  src?: string; // /public path; left undefined while assets are pending
+  src?: string; // /public path (without basePath); resolved via asset() at render time
   alt: string;
   /** "portrait" = 4:5, "landscape" = 16:9, "square" = 1:1, "wide" = 21:9 */
   ratio?: "portrait" | "landscape" | "square" | "wide";
@@ -19,105 +19,137 @@ export type WorkItem = {
   client: string;
   year: string;
   location?: string;
-  summary: string; // short home-card blurb
+  summary: string; // home-card blurb
   audience: IndustryKey;
+
+  /** Path under /public for the home card cover (without basePath). */
   cover?: string;
+  /** Path under /public for the case study page hero (without basePath). */
+  hero?: string;
 
   // Brochure fields (only used by hero case studies)
-  blurb?: string; // ~80 words for keen readers
+  blurb?: string;
   role?: string;
   scope?: string[];
-  status?: string; // "Launched 2024" / "In progress"
+  status?: string;
   collaborators?: string[];
   photography?: string;
-  /** Audience-targeted bullet pitch — facts + sales points framed for the target industry. */
+  duration?: string;
+  /** Audience-targeted brochure pitch — facts + sales points framed for the target industry. */
   salesPoints?: SalesPoint[];
   gallery?: GalleryImage[];
 };
 
-// Hero case studies (full /work/[slug] pages).
+// Hero case studies — full /work/[slug] pages.
 export const HERO_WORK: WorkItem[] = [
   {
     slug: "finish-line",
     index: "W/01",
     title: "Finish Line Car Detailing",
-    client: "Finish Line",
-    year: "2024",
-    location: "United States",
+    client: "Self-founded",
+    year: "2020 — 2023",
+    location: "Founded at 17",
     summary:
-      "A premium digital storefront for a service-led detailing studio — built to attract higher-tier clients and drive bookings.",
+      "A mobile detailing business I founded, branded, and ran for three years. The visual identity earned premium pricing in a category where most competitors look like they were last touched in 2008.",
     audience: "local-service",
+    cover: "/work/finish-line/01-cover.webp",
+    hero: "/work/finish-line/01-cover.webp",
     blurb:
-      "A repositioning project for a detailing studio whose work was pricing in the top tier of its market but whose website was not. We rebuilt the brand and the booking flow to read as a service worth scheduling around — quietly, without compromising the studio&apos;s voice.",
-    role: "Identity · Web · Build",
-    scope: ["Brand", "Web", "Booking flow"],
-    status: "Launched 2024",
-    collaborators: ["In-house photography"],
-    photography: "Studio",
+      "Finish Line was my own business — a mobile detailing service I started at seventeen and ran for three years. I built every piece of it: the brand, the website, the booking flow, the photography direction, the day-to-day operations. The visual identity carried it from a teenager&apos;s side-job to a service that justified premium pricing in a category most people consider a commodity.",
+    role: "Founder · Brand · Web · Operations",
+    scope: ["Brand", "Web", "Marketing", "Operations"],
+    status: "Sold-on / Wound down 2023",
+    duration: "3 years",
+    photography: "In-house",
     salesPoints: [
       {
         heading: "For local service operators",
-        body: "Your website is the first quote you give every prospect. This one closes them before they ever pick up the phone — calm, premium, booking-led.",
+        body: "Your website is the first quote you give every prospect. This one closed the right clients before they ever picked up the phone — premium-feeling, booking-led, calm.",
+      },
+      {
+        heading: "Premium positioning, no agency",
+        body: "Every piece of the brand was built single-handedly. Proof you can read as a serious operator without an in-house creative team or an agency retainer.",
       },
       {
         heading: "Designed to qualify, not capture",
-        body: "Every page is engineered to attract the right client and quietly turn the wrong one away. Higher tickets, fewer junk inquiries.",
+        body: "Engineered to attract clients with bigger jobs and to quietly turn away the price-shoppers. Higher tickets, fewer junk inquiries.",
       },
       {
-        heading: "Booking as the front door",
-        body: "A friction-free scheduling flow lives at the heart of the experience — built to convert intent into a confirmed appointment in under a minute.",
-      },
-      {
-        heading: "Inbound up roughly 3×",
-        body: "Within the first quarter post-launch, qualified inbound rose by ~3× and average ticket size grew alongside it.",
+        heading: "Three years of operating proof",
+        body: "Built, ran, and shipped the entire operation from age 17 onward — brand strategy, customer service, scheduling, repeat-client retention. The website was downstream of real business decisions.",
       },
     ],
     gallery: [
-      { alt: "Finish Line — exterior hero", ratio: "wide" },
-      { alt: "Booking flow — desktop", ratio: "landscape" },
-      { alt: "Booking flow — mobile", ratio: "portrait" },
-      { alt: "Service detail spread", ratio: "landscape" },
+      {
+        src: "/work/finish-line/01-cover.webp",
+        alt: "Finish Line — brand identity",
+        ratio: "wide",
+      },
+      {
+        src: "/work/finish-line/02.webp",
+        alt: "Finish Line — service in context",
+        ratio: "landscape",
+      },
+      {
+        src: "/work/finish-line/03.jpg",
+        alt: "Finish Line — environment",
+        ratio: "landscape",
+      },
     ],
   },
   {
     slug: "3d-design",
     index: "W/02",
-    title: "3D Design",
-    client: "Confidential",
-    year: "2024",
+    title: "Building Management Sales Site",
+    client: "Bar-Tech Automation",
+    year: "2026",
+    location: "B2B SaaS",
     summary:
-      "Identity and site for a 3D-led creative studio — typography, motion and image working as a single editorial voice.",
-    audience: "creative-brand",
+      "A sales website for a Building Management System — re-pointed at mechanical distributors and integrators rather than end users. Custom 3D, technical voice, lead-generation engineered around relationship sales.",
+    audience: "b2b-tech",
+    cover: "/work/3d-design/01-cover.png",
+    hero: "/work/3d-design/02.webp",
     blurb:
-      "A studio rebrand and site for a 3D-led creative practice whose work was already at agency-of-record level but whose presentation read more like a portfolio. The new system positions the studio as a thesis — a worldview clients can buy into — not a list of past projects.",
-    role: "Identity · Web · Motion",
-    scope: ["Brand", "Web", "Motion direction"],
-    status: "Launched 2024",
-    collaborators: ["Studio motion team"],
-    photography: "Studio renders",
+      "A re-architected sales site for a Building Management System. The existing site sold to end-buyers; this one sells to the distributors and mechanical integrators who actually move product. The job was to translate a deeply technical product into a story that earned a quote-request, not a checkout.",
+    role: "Design · Build · 3D",
+    scope: ["Web", "3D modelling", "Sales narrative"],
+    status: "Launched 2026",
+    duration: "6 weeks",
+    collaborators: ["Bar-Tech engineering"],
     salesPoints: [
       {
-        heading: "For creative-led studios",
-        body: "Your work already speaks. The website&apos;s job is to frame it — like a thesis statement, not a résumé. This one does.",
+        heading: "For B2B & industrial SaaS",
+        body: "Most product sites in the trade try to sell direct. This one was built to earn a partnership conversation — quote requests, distributor introductions, integrator demos. The whole funnel is relationship-led.",
       },
       {
-        heading: "Editorial scaffold, kinetic content",
-        body: "A single-column, magazine-grade type system that gets out of the way when the renders need the room.",
+        heading: "3D as a sales asset, not a flourish",
+        body: "Custom Blender models render the product in operational context — so a buyer can see the system on their site without a salesperson on a call.",
       },
       {
-        heading: "Built for senior buyers",
-        body: "Designed to read with confidence inside a procurement deck — and still feel current to the designers being recruited.",
+        heading: "Technical clarity at marketing pace",
+        body: "Engineered to read fluently to a mechanical engineer and a procurement lead in the same scroll. No jargon for jargon&apos;s sake; no marketing fog over the spec.",
       },
       {
-        heading: "Right-sized inbound",
-        body: "Reports of larger, better-aligned client inquiries within weeks of launch. Junior applications doubled.",
+        heading: "Six weeks, one designer-developer",
+        body: "Strategy, design, build, 3D, copy direction — handled end-to-end on a six-week timeline. No agency overhead, no handoffs to lose meaning across.",
       },
     ],
     gallery: [
-      { alt: "3D Design — hero render", ratio: "wide" },
-      { alt: "Type-led case spread", ratio: "landscape" },
-      { alt: "Motion still", ratio: "square" },
-      { alt: "Project page in context", ratio: "landscape" },
+      {
+        src: "/work/3d-design/01-cover.png",
+        alt: "BMS sales site — hero composition",
+        ratio: "wide",
+      },
+      {
+        src: "/work/3d-design/02.webp",
+        alt: "BMS sales site — 3D product render",
+        ratio: "landscape",
+      },
+      {
+        src: "/work/3d-design/03.png",
+        alt: "BMS sales site — interface in context",
+        ratio: "landscape",
+      },
     ],
   },
 ];
@@ -127,22 +159,24 @@ export const RECENT_WORK: WorkItem[] = [
   {
     slug: "",
     index: "W/03",
-    title: "Campus & Site Map Design",
-    client: "Confidential",
-    year: "2024",
+    title: "Campus & Site Map",
+    client: "Bar-Tech Automation",
+    year: "2026",
     summary:
-      "A wayfinding system rendered with the legibility of a printed atlas — for an institutional audience.",
-    audience: "education-civic",
+      "An isometric 3D campus map for a Building Management System homepage. Detailed buildings for assets under monitoring, simplified white forms for facilities not yet on the system — visual proof of system reach.",
+    audience: "b2b-tech",
+    cover: "/work/campus/01-cover.webp",
   },
   {
     slug: "",
     index: "W/04",
     title: "Floors Restore & More",
     client: "Floors Restore",
-    year: "2024",
+    year: "2026",
     summary:
-      "Brand and site for a restoration trade — repositioning a local service as a craft.",
+      "Logo and complete brand guidelines for a floor-restoration trade — repositioning a hands-on service as a craft, with type and color built to last.",
     audience: "restoration-trades",
+    cover: "/work/floors/01-cover.webp",
   },
 ];
 

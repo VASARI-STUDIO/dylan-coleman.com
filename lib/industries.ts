@@ -5,13 +5,13 @@ export const INDUSTRIES = {
     label: "Local Service Businesses",
     short: "Local Service",
   },
+  "b2b-tech": {
+    label: "B2B Tech & Industrial",
+    short: "B2B / Industrial",
+  },
   "creative-brand": {
     label: "Creative & Design-led Brands",
     short: "Creative",
-  },
-  "education-civic": {
-    label: "Education & Civic",
-    short: "Education / Civic",
   },
   "restoration-trades": {
     label: "Restoration & Trades",

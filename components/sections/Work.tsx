@@ -5,6 +5,7 @@ import { IndustryTag } from "@/components/ui/IndustryTag";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { HERO_WORK, RECENT_WORK } from "@/content/work/_recent";
+import { asset } from "@/lib/asset";
 
 export function Work() {
   return (
@@ -33,10 +34,19 @@ export function Work() {
                   href={`/work/${w.slug}`}
                   className="group block overflow-hidden rounded-2xl bg-card transition-transform duration-300 hover:-translate-y-1"
                 >
-                  <div className="aspect-[4/5] w-full overflow-hidden bg-secondary/40">
-                    <div className="grid h-full place-items-center text-muted-foreground">
-                      <span className="smallcaps">{w.index} · cover</span>
-                    </div>
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-secondary/40">
+                    {w.cover ? (
+                      <img
+                        src={asset(w.cover)}
+                        alt={w.title}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center text-muted-foreground">
+                        <span className="smallcaps">{w.index} · cover</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6 md:p-8">
                     <div className="flex items-baseline justify-between gap-4">
@@ -72,10 +82,19 @@ export function Work() {
             {RECENT_WORK.map((w, i) => (
               <FadeUp key={w.index} delay={i * 0.1}>
                 <li className="overflow-hidden rounded-2xl bg-card">
-                  <div className="aspect-[3/2] w-full overflow-hidden bg-secondary/40">
-                    <div className="grid h-full place-items-center text-muted-foreground">
-                      <span className="smallcaps">{w.index} · cover</span>
-                    </div>
+                  <div className="relative aspect-[3/2] w-full overflow-hidden bg-secondary/40">
+                    {w.cover ? (
+                      <img
+                        src={asset(w.cover)}
+                        alt={w.title}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center text-muted-foreground">
+                        <span className="smallcaps">{w.index} · cover</span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-5 md:p-6">
                     <div className="flex items-baseline justify-between gap-4">
