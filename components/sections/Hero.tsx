@@ -94,7 +94,7 @@ export function Hero() {
           </div>
           <div>
             <dt className="smallcaps">Based</dt>
-            <dd className="mt-1 text-foreground">United States · Remote</dd>
+            <dd className="mt-1 text-foreground">Brisbane, Australia · Remote</dd>
           </div>
           <div>
             <dt className="smallcaps">Working with</dt>

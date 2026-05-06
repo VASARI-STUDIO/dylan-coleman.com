@@ -7,8 +7,8 @@ import { asset } from "@/lib/asset";
 const stats = [
   { k: "Practicing", v: "5+ years" },
   { k: "Projects shipped", v: "45+" },
-  { k: "Discipline", v: "Brand · Web" },
-  { k: "Currently", v: "In-house · Freelance" },
+  { k: "Based", v: "Brisbane, AU" },
+  { k: "Currently", v: "Bar-Tech · Freelance" },
 ];
 
 const principles = [
@@ -62,16 +62,18 @@ export function About() {
             {/* Scroll-driven word reveal */}
             <ScrollRevealParagraph
               className="font-sans text-2xl md:text-3xl font-medium tight-tracking max-w-prose"
-              text="I started building websites at seventeen. What began as a freelance habit grew into a practice — built on a quiet conviction that the best digital work feels less like marketing, and more like architecture: planned, patient, made to last."
-              highlight={["practice", "architecture", "patient"]}
+              text="I founded my first business at seventeen — Finish Line Car Detailing, a mobile studio I ran in Brisbane for three years. Building the brand from scratch became my proof of concept: design, treated like architecture, can move a small operator into a category most consider out of reach."
+              highlight={["seventeen", "architecture", "Brisbane"]}
             />
 
             <FadeUp delay={0.1}>
               <p className="mt-8 max-w-prose text-body text-muted-foreground">
-                I work with a small number of clients each year — mostly on
-                brand websites and product launches where the design and the
-                code matter equally. The result is meant to feel inevitable: the
-                only way the brand could have been built.
+                Today I split my work between an in-house role at Bar-Tech
+                Automation — designing for industrial Building Management
+                Systems — and a small freelance practice for brands ready to be
+                taken seriously. I work with a few clients a year. The result
+                is meant to feel inevitable: the only way the brand could have
+                been built.
               </p>
             </FadeUp>
 

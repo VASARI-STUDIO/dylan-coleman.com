@@ -48,9 +48,9 @@ export const HERO_WORK: WorkItem[] = [
     title: "Finish Line Car Detailing",
     client: "Self-founded",
     year: "2020 — 2023",
-    location: "Founded at 17",
+    location: "Brisbane, Australia",
     summary:
-      "A mobile detailing business I founded, branded, and ran for three years. The visual identity earned premium pricing in a category where most competitors look like they were last touched in 2008.",
+      "A mobile detailing business I founded at 17, branded, and ran in Brisbane for three years. The visual identity earned premium pricing in a category where most competitors look like they were last touched in 2008.",
     audience: "local-service",
     cover: "/work/finish-line/01-cover.webp",
     hero: "/work/finish-line/01-cover.webp",
@@ -103,7 +103,7 @@ export const HERO_WORK: WorkItem[] = [
     title: "Building Management Sales Site",
     client: "Bar-Tech Automation",
     year: "2026",
-    location: "B2B SaaS",
+    location: "Brisbane, Australia",
     summary:
       "A sales website for a Building Management System — re-pointed at mechanical distributors and integrators rather than end users. Custom 3D, technical voice, lead-generation engineered around relationship sales.",
     audience: "b2b-tech",
