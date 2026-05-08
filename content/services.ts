@@ -11,35 +11,35 @@ export type Service = {
 
 export const SERVICES: Service[] = [
   {
-    id: "brand-website",
+    id: "website",
     index: "S/01",
-    title: "Brand Websites",
+    title: "Websites, end-to-end",
     tagline:
-      "A full digital presence — designed, built, and tuned to earn trust. For brands ready to be taken seriously.",
+      "A premium digital presence — designed, built, launched, and (if you want) looked after. Considered, performance-tuned, made to last.",
     scope: [
       "Discovery, audience & positioning",
-      "Visual identity moments — type, color, motion",
       "Custom design across every page and breakpoint",
-      "Performance-tuned build on Next.js",
-      "On-page SEO and analytics",
+      "Performance build on Next.js or Framer",
+      "SEO foundations and analytics setup",
       "Launch support and a 30-day warranty",
+      "Optional ongoing management — updates, content, performance tuning",
     ],
-    timeline: "4 – 8 weeks",
+    timeline: "4 – 8 weeks · Ongoing optional",
   },
   {
-    id: "landing-page",
+    id: "brand-marketing",
     index: "S/02",
-    title: "Landing Pages",
+    title: "Brand & Marketing Design",
     tagline:
-      "A single page, sharpened for one outcome. For launches, campaigns, and waitlists where every word and frame counts.",
+      "Visual identity systems and the marketing materials that live inside them. From wordmark to launch campaign — built coherent, made to scale.",
     scope: [
-      "Messaging hierarchy & one clear conversion path",
-      "Custom design and editorial layout",
-      "Build with motion where it earns its place",
-      "Form, payment or booking integration",
-      "A/B-ready architecture",
+      "Visual identity — wordmark, type, colour, motion direction",
+      "Brand guidelines documentation",
+      "Marketing collateral — decks, brochures, social, ads",
+      "Launch campaign assets",
+      "Photography and 3D art direction",
     ],
-    timeline: "1 – 3 weeks",
+    timeline: "2 – 6 weeks",
   },
   {
     id: "open-brief",
