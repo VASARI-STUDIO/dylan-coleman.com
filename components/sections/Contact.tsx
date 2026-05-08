@@ -11,7 +11,7 @@ const BUDGETS = ["Under $3k", "$3k – $8k", "$8k – $20k", "$20k+"];
 const TIMELINES = ["ASAP", "1 – 2 months", "2 – 4 months", "Just exploring"];
 
 const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "";
-const TO_EMAIL = "hello@dylan-coleman.com";
+const TO_EMAIL = "contact@dylan-coleman.com";
 
 type Status = "idle" | "submitting" | "ok" | "error";
 

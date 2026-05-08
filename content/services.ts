@@ -4,8 +4,9 @@ export type Service = {
   title: string;
   tagline: string;
   scope: string[];
-  priceRange: string;
-  timeline: string;
+  timeline?: string;
+  /** When true, this card renders as the open-ended "anything else?" CTA. */
+  openCta?: boolean;
 };
 
 export const SERVICES: Service[] = [
@@ -23,7 +24,6 @@ export const SERVICES: Service[] = [
       "On-page SEO and analytics",
       "Launch support and a 30-day warranty",
     ],
-    priceRange: "$6k – $18k",
     timeline: "4 – 8 weeks",
   },
   {
@@ -39,7 +39,15 @@ export const SERVICES: Service[] = [
       "Form, payment or booking integration",
       "A/B-ready architecture",
     ],
-    priceRange: "$2.5k – $6k",
     timeline: "1 – 3 weeks",
+  },
+  {
+    id: "open-brief",
+    index: "S/03",
+    title: "Got something else in mind?",
+    tagline:
+      "Brand systems, product launches, packaging, identity refreshes, or something I haven't even thought of yet — get in touch and tell me what you're building.",
+    scope: [],
+    openCta: true,
   },
 ];
