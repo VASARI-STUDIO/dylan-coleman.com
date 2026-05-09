@@ -5,6 +5,7 @@ import { IndustryTag } from "@/components/ui/IndustryTag";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { SHOP } from "@/content/shop";
+import { asset } from "@/lib/asset";
 
 export function Shop() {
   return (
@@ -28,10 +29,19 @@ export function Shop() {
           {SHOP.map((p, i) => (
             <FadeUp key={p.id} delay={0.1 + i * 0.1}>
               <li className="flex h-full flex-col overflow-hidden rounded-2xl bg-card">
-                <div className="aspect-[4/5] overflow-hidden bg-secondary/40">
-                  <div className="grid h-full place-items-center text-muted-foreground">
-                    <span className="smallcaps">{p.index} · preview</span>
-                  </div>
+                <div className="relative aspect-[4/5] overflow-hidden bg-secondary/40">
+                  {p.cover ? (
+                    <img
+                      src={asset(p.cover)}
+                      alt={p.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="grid h-full place-items-center text-muted-foreground">
+                      <span className="smallcaps">{p.index} · preview</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-1 flex-col p-6 md:p-7">
                   <div className="flex items-baseline justify-between">
@@ -47,9 +57,11 @@ export function Shop() {
 
                   <div className="flex items-center justify-between">
                     <IndustryTag k={p.audience} />
-                    <span className="font-sans text-h6 font-semibold leading-none">
-                      {p.price}
-                    </span>
+                    {p.price && (
+                      <span className="font-sans text-h6 font-semibold leading-none">
+                        {p.price}
+                      </span>
+                    )}
                   </div>
 
                   <div className="mt-6">

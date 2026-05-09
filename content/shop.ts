@@ -7,24 +7,27 @@ export type ShopItem = {
   blurb: string;
   audience: IndustryKey;
   platform: "Framer" | "Next.js" | "Webflow";
-  price: string;
+  /** Optional — leave undefined to hide. */
+  price?: string;
   ctaLabel: string;
   externalUrl: string;
+  /** Optional preview image — path under /public, resolved via asset(). */
+  cover?: string;
   status: "Available" | "Coming Soon";
 };
 
 export const SHOP: ShopItem[] = [
   {
-    id: "framer-template-01",
+    id: "adam-and-emily",
     index: "T/01",
-    title: "Editorial — A Premium Brand Template",
+    title: "Adam & Emily — Wedding Invitation Template",
     blurb:
-      "An editorial Framer template for studios and creative-led businesses. Considered typography, generous whitespace, and a calm confident voice — ready to make your own.",
-    audience: "creative-brand",
+      "An editorial wedding-invitation site for couples planning a premium, considered day. Calm typography, a deep-cream palette, every page already shaped — RSVP, schedule, accommodation, travel.",
+    audience: "weddings",
     platform: "Framer",
-    price: "From $79",
-    ctaLabel: "Buy on Framer",
-    externalUrl: "https://framer.com/marketplace/",
+    cover: "/work/adam-and-emily/01.webp",
+    ctaLabel: "Preview & Buy",
+    externalUrl: "https://adamandemily.framer.website/",
     status: "Available",
   },
 ];
