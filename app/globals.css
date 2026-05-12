@@ -27,6 +27,15 @@ body {
   color: hsl(var(--foreground));
 }
 
+/* While the Preloader is up, lock the document and hide overflow so the
+ * curtain reveal works against a still page. */
+html.is-preloading {
+  overflow: hidden;
+}
+html.is-preloading body {
+  overflow: hidden;
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

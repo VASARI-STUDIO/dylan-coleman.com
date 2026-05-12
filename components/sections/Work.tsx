@@ -1,16 +1,30 @@
+"use client";
+
 import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { IndustryTag } from "@/components/ui/IndustryTag";
-import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
-import { HERO_WORK, RECENT_WORK } from "@/content/work/_recent";
+import { HERO_WORK, type WorkItem } from "@/content/work/_recent";
 import { asset } from "@/lib/asset";
 
+// Full-width scroll-list of projects. Each row spans 90vh, holds the visitor's
+// attention on a single piece, and reveals an audience-targeted blurb only
+// when the row sits centered in the viewport — so prospects self-select by
+// the industry that matches them.
+//
+// CSS scroll-snap is set to `proximity` (not mandatory) so the page never
+// feels grabby — Lenis's smoothed scroll glides between rows but lands cleanly.
 export function Work() {
   return (
-    <section id="work" className="scroll-mt-24 border-t border-border/40">
-      <div className="mx-auto max-w-page px-6 md:px-12 py-24 md:py-36">
+    <section
+      id="work"
+      className="scroll-mt-24 border-t border-border/40"
+      style={{ scrollSnapType: "y proximity" }}
+    >
+      <div className="mx-auto max-w-page px-6 md:px-12 pt-24 md:pt-36 pb-12 md:pb-16">
         <FadeUp>
           <SectionHeader
             index="01"
@@ -21,101 +35,104 @@ export function Work() {
                 <span className="serif-italic">specific</span> audience.
               </>
             }
-            intro="Every project is positioned for a single industry. So the right clients see themselves in the work, and the rest move on."
+            intro="Scroll through each piece. Linger on the one closest to what you're building — its detail page is written for that audience."
           />
         </FadeUp>
-
-        {/* Hero case studies (linked) */}
-        <ol className="mt-16 grid gap-10 md:grid-cols-2">
-          {HERO_WORK.map((w, i) => (
-            <FadeUp key={w.slug} delay={0.1 + i * 0.1}>
-              <li>
-                <Link
-                  href={`/work/${w.slug}`}
-                  className="group block overflow-hidden rounded-2xl bg-card transition-transform duration-300 hover:-translate-y-1"
-                >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-secondary/40">
-                    {w.cover ? (
-                      <img
-                        src={asset(w.cover)}
-                        alt={w.title}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                      />
-                    ) : (
-                      <div className="grid h-full place-items-center text-muted-foreground">
-                        <span className="smallcaps">{w.index} · cover</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6 md:p-8">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <h3 className="font-sans text-h3 font-medium tight-tracking text-foreground transition-colors group-hover:text-foreground/85">
-                        {w.title}
-                      </h3>
-                      <span className="smallcaps shrink-0">{w.year}</span>
-                    </div>
-                    <p className="mt-3 max-w-prose text-sm text-muted-foreground">
-                      {w.summary}
-                    </p>
-                    <div className="mt-6 flex items-center justify-between">
-                      <IndustryTag k={w.audience} />
-                      <span className="inline-flex items-center gap-1 text-sm text-foreground transition-transform group-hover:translate-x-0.5">
-                        Read case <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            </FadeUp>
-          ))}
-        </ol>
-
-        <Rule className="mt-24" />
-
-        {/* Recent work — no detail page */}
-        <div className="mt-12 grid gap-3 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <p className="smallcaps">Recent</p>
-          </div>
-          <ul className="md:col-span-9 grid gap-10 md:grid-cols-2">
-            {RECENT_WORK.map((w, i) => (
-              <FadeUp key={w.index} delay={i * 0.1}>
-                <li className="overflow-hidden rounded-2xl bg-card">
-                  <div className="relative aspect-[3/2] w-full overflow-hidden bg-secondary/40">
-                    {w.cover ? (
-                      <img
-                        src={asset(w.cover)}
-                        alt={w.title}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="grid h-full place-items-center text-muted-foreground">
-                        <span className="smallcaps">{w.index} · cover</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-5 md:p-6">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <h4 className="font-sans text-h4 font-medium tight-tracking">
-                        {w.title}
-                      </h4>
-                      <span className="smallcaps shrink-0">{w.year}</span>
-                    </div>
-                    <p className="mt-2 max-w-prose text-sm text-muted-foreground">
-                      {w.summary}
-                    </p>
-                    <div className="mt-5">
-                      <IndustryTag k={w.audience} />
-                    </div>
-                  </div>
-                </li>
-              </FadeUp>
-            ))}
-          </ul>
-        </div>
       </div>
+
+      <ul className="w-full">
+        {HERO_WORK.map((item, i) => (
+          <WorkRow key={item.slug} item={item} index={i} />
+        ))}
+      </ul>
     </section>
+  );
+}
+
+function WorkRow({ item, index }: { item: WorkItem; index: number }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  // Focus = how "centered" the row is in the viewport (peaks at 0.5).
+  const focus = useTransform(
+    scrollYProgress,
+    [0, 0.35, 0.5, 0.65, 1],
+    [0, 0.6, 1, 0.6, 0],
+  );
+  const opacity = useTransform(focus, [0, 1], [0.45, 1]);
+  const blurbOpacity = useTransform(focus, [0.55, 1], [0, 1]);
+  const blurbY = useTransform(focus, [0.55, 1], [12, 0]);
+  const imageScale = useTransform(focus, [0, 1], [1.08, 1]);
+  // Indent slightly when centered — subtle "selected" feel
+  const titleX = useTransform(focus, [0, 1], [0, 12]);
+
+  const isLeftAlign = index % 2 === 0;
+
+  return (
+    <motion.li
+      ref={ref}
+      style={{ opacity, scrollSnapAlign: "center" }}
+      className="relative border-t border-border/40"
+    >
+      <Link
+        href={`/work/${item.slug}`}
+        className="group block min-h-[90vh] py-12 md:py-0"
+      >
+        <div
+          className={`mx-auto grid h-full min-h-[90vh] max-w-page items-center gap-8 px-6 md:px-12 md:gap-16 ${
+            isLeftAlign ? "md:grid-cols-[5fr_7fr]" : "md:grid-cols-[7fr_5fr]"
+          }`}
+        >
+          {/* Type column */}
+          <motion.div
+            style={{ x: titleX }}
+            className={`order-2 ${isLeftAlign ? "md:order-1" : "md:order-2"}`}
+          >
+            <div className="flex items-center gap-4">
+              <span className="smallcaps">{item.index}</span>
+              <span className="smallcaps">{item.year}</span>
+            </div>
+            <h3 className="mt-6 font-sans text-h2 font-medium tight-tracking">
+              {item.title}
+            </h3>
+            <div className="mt-4">
+              <IndustryTag k={item.audience} />
+            </div>
+            <motion.div
+              style={{ opacity: blurbOpacity, y: blurbY }}
+              className="mt-8"
+            >
+              <p className="max-w-prose text-body-lg text-muted-foreground">
+                {item.summary}
+              </p>
+              <div className="mt-8 inline-flex items-center gap-2 text-sm text-foreground transition-transform group-hover:translate-x-1">
+                Read case
+                <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Image column */}
+          <div
+            className={`relative order-1 h-[55vh] overflow-hidden rounded-2xl bg-card md:h-[78vh] ${
+              isLeftAlign ? "md:order-2" : "md:order-1"
+            }`}
+          >
+            {item.cover && (
+              <motion.img
+                src={asset(item.cover)}
+                alt={item.title}
+                style={{ scale: imageScale }}
+                loading={index < 1 ? "eager" : "lazy"}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
+          </div>
+        </div>
+      </Link>
+    </motion.li>
   );
 }

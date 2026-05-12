@@ -21,8 +21,10 @@ export function SmoothScroll() {
     if (typeof window === "undefined") return;
 
     const lenis = new Lenis({
-      lerp: 0.1,
+      // Tightened from 0.1 → 0.08 for a more pronounced Studio Namma glide.
+      lerp: 0.08,
       smoothWheel: true,
+      wheelMultiplier: 1,
       touchMultiplier: 1.5,
       autoRaf: true, // Lenis manages requestAnimationFrame internally
       anchors: { offset: NAV_OFFSET }, // built-in same-page hash handler

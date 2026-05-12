@@ -73,7 +73,7 @@ export function Contact() {
       <div className="mx-auto max-w-page px-6 md:px-12 py-24 md:py-36">
         <FadeUp>
           <SectionHeader
-            index="05"
+            index="06"
             label="Plant a Seed"
             title={
               <>

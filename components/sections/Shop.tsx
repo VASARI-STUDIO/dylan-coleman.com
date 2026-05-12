@@ -13,7 +13,7 @@ export function Shop() {
       <div className="mx-auto max-w-page px-6 md:px-12 py-24 md:py-36">
         <FadeUp>
           <SectionHeader
-            index="03"
+            index="04"
             label="The Shop"
             title={
               <>
