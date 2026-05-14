@@ -21,8 +21,9 @@ const TS_MANIFEST = "lib/hero-frames.ts";
 // Set FRAME_COUNT to 0 to use every source frame (preserves the original
 // animation's full smoothness). Set to a positive number to evenly sample.
 const FRAME_COUNT = 0;
-const WIDTH = 1280; // Max output width (px)
-const QUALITY = 70; // WebP quality 0-100
+const WIDTH = 1920; // Native source width — no upscaling on 1080p+ screens
+const QUALITY = 82; // WebP quality 0-100. 82 hides compression noise on the
+//                     mostly-dark frames without ballooning size
 
 async function main() {
   if (!existsSync(SRC)) {
