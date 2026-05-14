@@ -143,12 +143,20 @@ export function HeroFrames({
     };
   }, [ready, triggerRef]);
 
+  // Canvas is fixed to the viewport so it spans the page seamlessly — no
+  // hero-shaped frame, no clipping at the section boundary. As the visitor
+  // scrolls, subsequent sections (with their opaque bg-background) paint over
+  // the canvas naturally; until then the frames act as a single full-bleed
+  // backdrop behind the hero content.
   return (
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="absolute inset-0 h-full w-full"
-      style={{ opacity: ready ? 1 : 0, transition: "opacity 800ms ease-out" }}
+      className="hero-canvas pointer-events-none fixed inset-0 h-screen w-screen"
+      style={{
+        opacity: ready ? 1 : 0,
+        transition: "opacity 800ms ease-out",
+      }}
     />
   );
 }

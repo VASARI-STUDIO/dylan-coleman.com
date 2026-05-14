@@ -36,6 +36,22 @@ html.is-preloading body {
   overflow: hidden;
 }
 
+/* The hero canvas is fixed to the viewport (behind everything in body).
+ * Every other content section needs an opaque background so it actually
+ * paints over the canvas as the visitor scrolls past — otherwise the bloom
+ * would bleed through Work / Services / Shop / etc. The Hero itself stays
+ * transparent so the canvas shows through. */
+.hero-canvas {
+  z-index: 0;
+}
+
+main > section:not(:first-of-type),
+footer {
+  position: relative;
+  z-index: 10;
+  background: hsl(var(--background));
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
