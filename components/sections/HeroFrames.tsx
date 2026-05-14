@@ -113,10 +113,13 @@ export function HeroFrames({
       const ScrollTrigger = mod.ScrollTrigger;
       gsap.registerPlugin(ScrollTrigger);
 
+      // Parallax range: animation plays while the hero is scrolling past.
+      // `top top` → `bottom top` spans the hero's own height — no pin, no
+      // scroll trap; the bloom keeps advancing as the visitor freely scrolls.
       st = ScrollTrigger.create({
         trigger,
         start: "top top",
-        end: "bottom bottom",
+        end: "bottom top",
         scrub: 0.4,
         onUpdate: (self) => {
           const idx = Math.min(
