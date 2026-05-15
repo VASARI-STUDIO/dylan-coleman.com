@@ -43,8 +43,51 @@ export type WorkItem = {
 // Hero case studies — full /work/[slug] pages.
 export const HERO_WORK: WorkItem[] = [
   {
-    slug: "adam-and-emily",
+    slug: "uil4b",
     index: "W/01",
+    title: "UIL4B",
+    client: "Self-published product",
+    year: "2026",
+    location: "Brisbane, Australia",
+    summary:
+      "A free browser-based design toolkit. Colour palettes, type scales, font pairing, icons, image conversion, video-frame extraction, production-ready CSS exports — no install, no signup, no subscription.",
+    audience: "designers-builders",
+    blurb:
+      "UIL4B started as a private utility — the toolkit I kept rebuilding for every project. Eventually I shipped it. It generates colour palettes and type scales, pairs fonts, serves an icon library, converts images between formats, extracts frames from video sequences, and exports production-ready CSS. Everything happens in the browser. No install, no signup, no SaaS subscription. The same toolkit, in fact, used to extract the hero frames on the site you&apos;re reading this on.",
+    role: "Product · Design · Build",
+    scope: ["Product strategy", "UI", "Engineering", "Design system"],
+    status: "Live · Free forever",
+    duration: "Ongoing",
+    photography: "Self-shot UI captures",
+    salesPoints: [
+      {
+        heading: "For designers and small studios",
+        body: "The utilities you reach for on every project — palettes, type scales, font pairing, image conversion, icons — assembled into one place, free, with nothing to install.",
+      },
+      {
+        heading: "Browser-based, owned by you",
+        body: "No accounts, no telemetry, no SaaS lock-in. Drag a file in, get an export out. Close the tab and it&apos;s gone.",
+      },
+      {
+        heading: "Production-grade output",
+        body: "Exports are clean CSS, ready to paste into a real project. Palettes ship as variables. Type scales ship as utilities. Image conversions hit current best-practice formats.",
+      },
+      {
+        heading: "Proof on this page",
+        body: "The 76 hero frames behind these words were extracted, re-encoded, and exported using UIL4B. The toolkit eats its own dogfood.",
+      },
+    ],
+    gallery: [
+      { alt: "UIL4B — overview", ratio: "wide" },
+      { alt: "UIL4B — colour palettes", ratio: "landscape" },
+      { alt: "UIL4B — type scales & font pairing", ratio: "landscape" },
+      { alt: "UIL4B — icon library", ratio: "landscape" },
+      { alt: "UIL4B — image converter & video frames", ratio: "landscape" },
+    ],
+  },
+  {
+    slug: "adam-and-emily",
+    index: "W/02",
     title: "Adam & Emily",
     client: "Self-published template",
     year: "2026",
@@ -91,7 +134,7 @@ export const HERO_WORK: WorkItem[] = [
   },
   {
     slug: "finish-line",
-    index: "W/02",
+    index: "W/03",
     title: "Finish Line Car Detailing",
     client: "Self-founded",
     year: "2020 — 2023",
@@ -146,7 +189,7 @@ export const HERO_WORK: WorkItem[] = [
   },
   {
     slug: "3d-design",
-    index: "W/03",
+    index: "W/04",
     title: "Building Management Sales Site",
     client: "Bar-Tech Automation",
     year: "2026",
@@ -205,7 +248,7 @@ export const HERO_WORK: WorkItem[] = [
 export const RECENT_WORK: WorkItem[] = [
   {
     slug: "",
-    index: "W/04",
+    index: "W/05",
     title: "Campus & Site Map",
     client: "Bar-Tech Automation",
     year: "2026",
@@ -216,7 +259,7 @@ export const RECENT_WORK: WorkItem[] = [
   },
   {
     slug: "",
-    index: "W/05",
+    index: "W/06",
     title: "Floors Restore & More",
     client: "Floors Restore",
     year: "2026",

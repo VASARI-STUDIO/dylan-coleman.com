@@ -21,6 +21,10 @@ export const INDUSTRIES = {
     label: "Weddings & Events",
     short: "Weddings",
   },
+  "designers-builders": {
+    label: "Designers & Builders",
+    short: "Designers / Builders",
+  },
 } as const;
 
 export type IndustryKey = keyof typeof INDUSTRIES;
