@@ -23,5 +23,6 @@ next-env.d.ts
 .vercel
 .turbo
 
-# Raw hero frame source (200MB+ of PNGs) — committed output lives in public/hero/frames
+# Hero frame source folders — committed output lives in public/hero/frames
 Graphics/Hero Components/Portfolio Hero Frames/
+Graphics/Hero Components/frames for claude/

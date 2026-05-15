@@ -1,59 +1,62 @@
-// One-shot script: re-encode the source PNG hero frame sequence into a
-// reasonable WebP set we can actually ship.
+// Hero frame pipeline.
 //
-// Source:  Graphics/Hero Components/Portfolio Hero Frames/frame-NNNNN.png
-// Output:  public/hero/frames/frame-NNN.webp + public/hero/manifest.json
+// Reads frames from SRC (auto-detected), normalises filenames to
+// frame-NNN.webp, writes to public/hero/frames, and emits both a JSON
+// manifest and a TS module so the component count stays in sync.
 //
-// Tuning knobs are at the top — change FRAME_COUNT, WIDTH, QUALITY and
-// re-run `npm run build:hero-frames` if you want to trade size for fidelity.
+// Source can be either:
+//   - PNG sequence  → re-encoded with sharp at WIDTH / QUALITY below
+//   - WebP sequence → copied as-is (used when frames are already optimised)
+//
+// Set FRAME_COUNT to 0 to use every source frame; positive numbers sample
+// evenly across the sequence.
 
-import { readdir, mkdir, writeFile, rm } from "node:fs/promises";
+import { readdir, mkdir, writeFile, rm, copyFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
-const SRC = "Graphics/Hero Components/Portfolio Hero Frames";
+// Try these source folders in order. First one that exists wins.
+const SRC_CANDIDATES = [
+  "Graphics/Hero Components/frames for claude",
+  "Graphics/Hero Components/Portfolio Hero Frames",
+];
 const OUT = "public/hero/frames";
 const MANIFEST = "public/hero/manifest.json";
 const TS_MANIFEST = "lib/hero-frames.ts";
 
-// Output settings.
-// Set FRAME_COUNT to 0 to use every source frame (preserves the original
-// animation's full smoothness). Set to a positive number to evenly sample.
+// Used only when source is PNG (re-encoded). Ignored for WebP source.
 const FRAME_COUNT = 0;
-const WIDTH = 1920; // Native source width — no upscaling on 1080p+ screens
-const QUALITY = 82; // WebP quality 0-100. 82 hides compression noise on the
-//                     mostly-dark frames without ballooning size
+const WIDTH = 1920;
+const QUALITY = 82;
 
 async function main() {
-  if (!existsSync(SRC)) {
-    console.error(`Source folder not found: ${SRC}`);
-    console.error(
-      "Drop the PNG frame sequence into that folder and re-run, or update SRC at the top of this script.",
-    );
+  const SRC = SRC_CANDIDATES.find((p) => existsSync(p));
+  if (!SRC) {
+    console.error("No source folder found. Tried:");
+    SRC_CANDIDATES.forEach((p) => console.error(`  - ${p}`));
     process.exit(1);
   }
 
   const all = (await readdir(SRC))
-    .filter((f) => f.toLowerCase().endsWith(".png"))
+    .filter((f) => /\.(png|webp)$/i.test(f))
     .sort();
 
   if (all.length === 0) {
-    console.error(`No .png files in ${SRC}`);
+    console.error(`No image files in ${SRC}`);
     process.exit(1);
   }
 
-  console.log(`Source: ${all.length} frames`);
+  const isWebp = /\.webp$/i.test(all[0]);
+  console.log(`Source: ${SRC} (${all.length} ${isWebp ? "WebP" : "PNG"} frames)`);
 
-  // Clean output, re-create
   if (existsSync(OUT)) await rm(OUT, { recursive: true });
   await mkdir(OUT, { recursive: true });
 
-  // FRAME_COUNT === 0 → use every source frame; otherwise sample evenly.
+  // Sample if requested AND source is PNG (no point sampling pre-built WebPs;
+  // the user already chose the count when they exported them).
   let selected;
-  if (FRAME_COUNT === 0 || FRAME_COUNT >= all.length) {
-    selected = all;
-  } else {
+  if (!isWebp && FRAME_COUNT > 0 && FRAME_COUNT < all.length) {
     selected = [];
     const span = all.length - 1;
     const steps = FRAME_COUNT - 1;
@@ -61,24 +64,41 @@ async function main() {
       const idx = Math.round((i / steps) * span);
       selected.push(all[idx]);
     }
+  } else {
+    selected = all;
   }
 
-  console.log(
-    `Encoding ${selected.length} frames → WebP @ ${WIDTH}px Q${QUALITY}`,
-  );
-
   let totalBytes = 0;
-  for (let i = 0; i < selected.length; i++) {
-    const src = path.join(SRC, selected[i]);
-    const out = path.join(OUT, `frame-${String(i + 1).padStart(3, "0")}.webp`);
-    const info = await sharp(src)
-      .resize({ width: WIDTH, withoutEnlargement: true })
-      .webp({ quality: QUALITY, effort: 6 })
-      .toFile(out);
-    totalBytes += info.size;
-    process.stdout.write(
-      `\r  ${String(i + 1).padStart(3, "0")}/${selected.length} · ${(info.size / 1024).toFixed(0)} KB    `,
+
+  if (isWebp) {
+    console.log(`Copying ${selected.length} WebP frames as-is`);
+    for (let i = 0; i < selected.length; i++) {
+      const src = path.join(SRC, selected[i]);
+      const out = path.join(OUT, `frame-${String(i + 1).padStart(3, "0")}.webp`);
+      await copyFile(src, out);
+      const { statSync } = await import("node:fs");
+      const size = statSync(out).size;
+      totalBytes += size;
+      process.stdout.write(
+        `\r  ${String(i + 1).padStart(3, "0")}/${selected.length} · ${(size / 1024).toFixed(0)} KB    `,
+      );
+    }
+  } else {
+    console.log(
+      `Encoding ${selected.length} PNG frames → WebP @ ${WIDTH}px Q${QUALITY}`,
     );
+    for (let i = 0; i < selected.length; i++) {
+      const src = path.join(SRC, selected[i]);
+      const out = path.join(OUT, `frame-${String(i + 1).padStart(3, "0")}.webp`);
+      const info = await sharp(src)
+        .resize({ width: WIDTH, withoutEnlargement: true })
+        .webp({ quality: QUALITY, effort: 6 })
+        .toFile(out);
+      totalBytes += info.size;
+      process.stdout.write(
+        `\r  ${String(i + 1).padStart(3, "0")}/${selected.length} · ${(info.size / 1024).toFixed(0)} KB    `,
+      );
+    }
   }
   console.log();
 
@@ -87,8 +107,10 @@ async function main() {
     JSON.stringify(
       {
         count: selected.length,
-        width: WIDTH,
-        quality: QUALITY,
+        source: SRC,
+        sourceFormat: isWebp ? "webp" : "png",
+        width: isWebp ? null : WIDTH,
+        quality: isWebp ? null : QUALITY,
         totalBytes,
         generatedAt: new Date().toISOString(),
       },
@@ -97,19 +119,15 @@ async function main() {
     ),
   );
 
-  // Also emit a TS module so HeroFrames.tsx imports the count at build time —
-  // keeps the component and the asset pipeline in sync automatically.
   await writeFile(
     TS_MANIFEST,
     `// Generated by scripts/build-hero-frames.mjs — do not edit by hand.\n` +
-      `export const HERO_FRAME_COUNT = ${selected.length};\n` +
-      `export const HERO_FRAME_WIDTH = ${WIDTH};\n`,
+      `export const HERO_FRAME_COUNT = ${selected.length};\n`,
   );
 
   console.log(
     `Done · ${selected.length} frames · ${(totalBytes / 1024 / 1024).toFixed(2)} MB total`,
   );
-  console.log(`Manifest: ${MANIFEST}`);
 }
 
 main().catch((err) => {
