@@ -37,10 +37,10 @@ html.is-preloading body {
 }
 
 /* The hero canvas is fixed to the viewport (behind everything in body).
- * Every other content section needs an opaque background so it actually
- * paints over the canvas as the visitor scrolls past — otherwise the bloom
- * would bleed through Work / Services / Shop / etc. The Hero itself stays
- * transparent so the canvas shows through. */
+ * Sections paint on top of it. The hero-bridge wrapper (containing Work +
+ * Services) carries a gradient overlay that fades transparent → opaque,
+ * smoothly hiding the canvas as the visitor scrolls past the hero. Every
+ * section beyond that wrapper is solidly opaque. */
 .hero-canvas {
   z-index: 0;
 }
@@ -50,6 +50,15 @@ footer {
   position: relative;
   z-index: 10;
   background: hsl(var(--background));
+}
+
+/* Sections inside the bridge must paint above the gradient overlay (z-5) but
+ * stay transparent so the gradient — and therefore the canvas underneath —
+ * shows through. */
+.hero-bridge > section {
+  position: relative;
+  z-index: 10;
+  background: transparent;
 }
 
 html {
