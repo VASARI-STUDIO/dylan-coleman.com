@@ -52,14 +52,6 @@ footer {
   background: hsl(var(--background));
 }
 
-/* Sections inside the bridge must paint above the gradient overlay (z-5) but
- * stay transparent so the gradient — and therefore the canvas underneath —
- * shows through. */
-.hero-bridge > section {
-  position: relative;
-  z-index: 10;
-  background: transparent;
-}
 
 html {
   -webkit-font-smoothing: antialiased;
