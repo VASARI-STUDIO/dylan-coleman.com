@@ -50,10 +50,12 @@ export const HERO_WORK: WorkItem[] = [
     year: "2026",
     location: "Brisbane, Australia",
     summary:
-      "A free browser-based design toolkit. Colour palettes, type scales, font pairing, icons, image conversion, video-frame extraction, production-ready CSS exports — no install, no signup, no subscription.",
+      "A free, browser-based design toolkit. Colour palettes and harmony modes, tint scales and WCAG contrast, gradients, modular type scales, font pairing, an icon library, image conversion, video-frame extraction, production-ready CSS exports — no install, no signup, no subscription.",
     audience: "designers-builders",
+    cover: "/work/uil4b/01-cover.webp",
+    hero: "/work/uil4b/01-cover.webp",
     blurb:
-      "UIL4B started as a private utility — the toolkit I kept rebuilding for every project. Eventually I shipped it. It generates colour palettes and type scales, pairs fonts, serves an icon library, converts images between formats, extracts frames from video sequences, and exports production-ready CSS. Everything happens in the browser. No install, no signup, no SaaS subscription. The same toolkit, in fact, used to extract the hero frames on the site you&apos;re reading this on.",
+      "UIL4B started as a private utility — the toolkit I kept rebuilding for every project. Eventually I shipped it. It builds colour palettes across six harmony modes, generates ten-step tint scales, checks WCAG contrast, composes gradients, calculates modular type scales, pairs fonts, serves an icon library, converts images between modern formats, and extracts frames from video — then exports the lot as production-ready CSS. Everything happens in the browser, behind a command palette, in nine languages, with nothing to install. No signup, no SaaS subscription. The same toolkit, in fact, was used to extract the hero frames on the site you&apos;re reading this on.",
     role: "Product · Design · Build",
     scope: ["Product strategy", "UI", "Engineering", "Design system"],
     status: "Live · Free forever",
@@ -62,27 +64,35 @@ export const HERO_WORK: WorkItem[] = [
     salesPoints: [
       {
         heading: "For designers and small studios",
-        body: "The utilities you reach for on every project — palettes, type scales, font pairing, image conversion, icons — assembled into one place, free, with nothing to install.",
+        body: "The utilities you reach for on every project — palettes and harmony modes, tint scales, WCAG contrast, gradients, modular type scales, font pairing, an icon library, image conversion — assembled into one place, free, with nothing to install.",
       },
       {
         heading: "Browser-based, owned by you",
-        body: "No accounts, no telemetry, no SaaS lock-in. Drag a file in, get an export out. Close the tab and it&apos;s gone.",
+        body: "No accounts required, no telemetry, no SaaS lock-in. Your work stays in the browser and exports whenever you want it. Drag a file in, get an export out.",
       },
       {
         heading: "Production-grade output",
-        body: "Exports are clean CSS, ready to paste into a real project. Palettes ship as variables. Type scales ship as utilities. Image conversions hit current best-practice formats.",
+        body: "Exports are clean CSS, ready to paste into a real project. Palettes ship as variables, type scales as utilities, and image conversions target current best-practice formats — WebP, AVIF, PNG and JPEG.",
+      },
+      {
+        heading: "Built for speed",
+        body: "A command palette (⌘/Ctrl + K) jumps to any tool, a drag-and-drop dashboard reorders the ones you live in, and the whole thing speaks nine languages with a system-aware dark and light theme.",
       },
       {
         heading: "Proof on this page",
         body: "The 76 hero frames behind these words were extracted, re-encoded, and exported using UIL4B. The toolkit eats its own dogfood.",
       },
     ],
+    // Screenshots: drop the files listed in public/work/uil4b/README.md into
+    // public/work/uil4b/ using these exact names and the gallery fills in.
     gallery: [
-      { alt: "UIL4B — overview", ratio: "wide" },
-      { alt: "UIL4B — colour palettes", ratio: "landscape" },
-      { alt: "UIL4B — type scales & font pairing", ratio: "landscape" },
-      { alt: "UIL4B — icon library", ratio: "landscape" },
-      { alt: "UIL4B — image converter & video frames", ratio: "landscape" },
+      { src: "/work/uil4b/01-cover.webp", alt: "UIL4B — dashboard with draggable tool cards", ratio: "wide" },
+      { src: "/work/uil4b/02-palette.webp", alt: "UIL4B — colour palette builder & harmony modes", ratio: "landscape" },
+      { src: "/work/uil4b/03-contrast.webp", alt: "UIL4B — tint scales & WCAG contrast checker", ratio: "landscape" },
+      { src: "/work/uil4b/04-gradient.webp", alt: "UIL4B — gradient builder", ratio: "landscape" },
+      { src: "/work/uil4b/05-type.webp", alt: "UIL4B — modular type scale & font pairing", ratio: "landscape" },
+      { src: "/work/uil4b/06-icons.webp", alt: "UIL4B — icon library", ratio: "landscape" },
+      { src: "/work/uil4b/07-convert.webp", alt: "UIL4B — image converter & video-to-frames", ratio: "landscape" },
     ],
   },
   {

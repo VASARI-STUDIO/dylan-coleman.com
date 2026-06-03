@@ -22,7 +22,7 @@ export const SHOP: ShopItem[] = [
     index: "T/01",
     title: "UIL4B — Design Toolkit",
     blurb:
-      "Free browser-based toolkit. Colour palettes, type scales, font pairing, icon library, image conversion, video-frame extraction, production-ready CSS exports — all in one place, no install, no signup.",
+      "Free, browser-based toolkit. Colour palettes and harmony modes, tint scales, WCAG contrast, gradients, modular type scales, font pairing, an icon library, image conversion, video-frame extraction, production-ready CSS exports — all in one place, no install, no signup.",
     audience: "designers-builders",
     platform: "Web app",
     price: "Free",

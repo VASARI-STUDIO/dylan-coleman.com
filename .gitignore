@@ -26,3 +26,4 @@ next-env.d.ts
 # Hero frame source folders — committed output lives in public/hero/frames
 Graphics/Hero Components/Portfolio Hero Frames/
 Graphics/Hero Components/frames for claude/
+*.tsbuildinfo
