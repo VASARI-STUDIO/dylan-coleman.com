@@ -3,6 +3,7 @@ import { sans, serif } from "@/lib/fonts";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { ScrollReset } from "@/components/ScrollReset";
 import { Preloader } from "@/components/Preloader";
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="bg-background text-foreground antialiased">
         <Preloader />
         <SmoothScroll />
+        <ScrollReset />
         <Nav />
         <main className="pt-20">{children}</main>
         <Footer />

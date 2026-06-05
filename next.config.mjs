@@ -1,11 +1,16 @@
 import createMDX from "@next/mdx";
 
-// Static export for GitHub Pages.
-// On Pages the site is served from /<repo-name>/, so we set basePath/assetPrefix.
-// Override with NEXT_PUBLIC_BASE_PATH (e.g. "" for a custom apex domain later).
+// Static export, served from two places:
+//   • GitHub Pages → site lives at /<repo-name>/, so we need a basePath.
+//   • Vercel (preview + prod) → site lives at the domain root, so NO basePath.
+// Vercel sets the `VERCEL` env var automatically during its builds, so we detect
+// it and drop the prefix there. An explicit NEXT_PUBLIC_BASE_PATH always wins
+// (e.g. set it to "" once a custom apex domain is wired up on Pages).
 const isProd = process.env.NODE_ENV === "production";
+const isVercel = !!process.env.VERCEL;
 const basePath =
-  process.env.NEXT_PUBLIC_BASE_PATH ?? (isProd ? "/dylan-coleman.com" : "");
+  process.env.NEXT_PUBLIC_BASE_PATH ??
+  (isVercel ? "" : isProd ? "/dylan-coleman.com" : "");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
