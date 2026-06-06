@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 
 // Elegant one-shot preloader. Mounts at app boot, holds for a minimum
@@ -14,10 +15,18 @@ const MIN_VISIBLE_MS = 1100;
 const MAX_WAIT_MS = 2500;
 
 export function Preloader() {
-  const [show, setShow] = useState(true);
+  // The intro is a homepage-entry moment only. If the visitor's first paint is a
+  // project page (deep link), or they reach the homepage later via client-side
+  // navigation, we skip it — the page-slide transition (app/template.tsx) covers
+  // those cases instead. Captured in a ref so the decision is made once, at
+  // mount, and never re-triggers when the route later changes.
+  const pathname = usePathname();
+  const shouldPreload = useRef(pathname === "/");
+  const [show, setShow] = useState(shouldPreload.current);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!shouldPreload.current) return;
 
     const start = performance.now();
     document.documentElement.classList.add("is-preloading");
