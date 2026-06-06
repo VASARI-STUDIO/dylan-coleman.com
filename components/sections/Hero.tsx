@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { Button } from "@/components/ui/Button";
+import { Coffee, Instagram, Linkedin, Mail } from "lucide-react";
 import { HeroFrames } from "@/components/sections/HeroFrames";
 
 const fade = (delay: number) => ({
@@ -10,6 +10,15 @@ const fade = (delay: number) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.7, delay, ease: "easeOut" as const },
 });
+
+const socials = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/dc.wrld/",
+    Icon: Instagram,
+  },
+  { label: "LinkedIn", href: "https://linkedin.com", Icon: Linkedin },
+];
 
 // Hero is a normal-height section (~one viewport). The frame sequence plays
 // out as a parallax background while the user freely scrolls past — no
@@ -73,30 +82,48 @@ export function Hero() {
             way once it has it.
           </motion.p>
 
-          {/* CTA pill */}
-          <motion.form
+          {/* Action row — contact + support, matched to the glass icon buttons */}
+          <motion.div
             {...fade(0.3)}
-            action="#contact"
-            method="get"
-            className="liquid-glass mt-8 flex w-full max-w-lg items-center gap-2 rounded-full p-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              window.location.hash = "#contact";
-            }}
+            className="mt-8 flex flex-wrap items-center justify-center gap-3"
           >
-            <input
-              type="email"
-              placeholder="Your email — start a conversation"
-              className="flex-1 bg-transparent px-5 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-              aria-label="Your email"
-            />
-            <Button
-              variant="solid"
-              className="!h-10 !px-6 text-xs uppercase tracking-[0.18em]"
+            <a
+              href="#contact"
+              className="liquid-glass inline-flex h-10 items-center gap-2 rounded-full px-5 text-sm text-foreground/90 transition-colors hover:text-foreground"
             >
-              Inquire
-            </Button>
-          </motion.form>
+              <Mail className="h-4 w-4" strokeWidth={1.5} />
+              Contact
+            </a>
+
+            <a
+              href="https://buymeacoffee.com/dylan.coleman"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="liquid-glass inline-flex h-10 items-center gap-2 rounded-full px-5 text-sm text-foreground/90 transition-colors hover:text-foreground"
+            >
+              <Coffee className="h-4 w-4" strokeWidth={1.5} />
+              Buy me a coffee
+            </a>
+
+            {/* Divider, then the social icon buttons sitting alongside */}
+            <span
+              aria-hidden
+              className="mx-1 hidden h-5 w-px bg-foreground/15 sm:block"
+            />
+
+            {socials.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="liquid-glass grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition-colors hover:text-foreground"
+              >
+                <Icon className="h-4 w-4" strokeWidth={1.5} />
+              </a>
+            ))}
+          </motion.div>
         </div>
 
         {/* Spec strip — bottom of viewport, over the water-reflection edge */}
