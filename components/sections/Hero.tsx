@@ -17,7 +17,11 @@ const socials = [
     href: "https://www.instagram.com/dc.wrld/",
     Icon: Instagram,
   },
-  { label: "LinkedIn", href: "https://linkedin.com", Icon: Linkedin },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/dylan-coleman-7667282b1/",
+    Icon: Linkedin,
+  },
 ];
 
 // Hero is a normal-height section (~one viewport). The frame sequence plays
