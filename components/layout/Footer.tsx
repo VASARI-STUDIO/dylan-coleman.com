@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Coffee } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 
 const links = [
@@ -6,6 +7,8 @@ const links = [
   { label: "Terms", href: "/" },
   { label: "Contact", href: "/#contact" },
 ];
+
+const BUY_ME_A_COFFEE = "https://buymeacoffee.com/dylan.coleman";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -16,15 +19,31 @@ export function Footer() {
           <Logo size={20} />
           <span>© {year} Dylan Coleman · Designed and built in-house</span>
         </div>
-        <ul className="flex items-center gap-6 text-sm text-muted-foreground">
-          {links.map((l) => (
-            <li key={l.label}>
-              <Link href={l.href} className="hover:text-foreground transition-colors">
-                {l.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+          <a
+            href={BUY_ME_A_COFFEE}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Coffee
+              className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
+              strokeWidth={1.5}
+            />
+            Buy me a coffee
+          </a>
+
+          <ul className="flex items-center gap-6 text-sm text-muted-foreground">
+            {links.map((l) => (
+              <li key={l.label}>
+                <Link href={l.href} className="hover:text-foreground transition-colors">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </footer>
   );
