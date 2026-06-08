@@ -2,27 +2,15 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { Coffee, Instagram, Linkedin, Mail } from "lucide-react";
+import { Coffee, Mail } from "lucide-react";
 import { HeroFrames } from "@/components/sections/HeroFrames";
+import { SOCIALS, BUY_ME_A_COFFEE } from "@/content/social";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.7, delay, ease: "easeOut" as const },
 });
-
-const socials = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/dc.wrld/",
-    Icon: Instagram,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/dylan-coleman-7667282b1/",
-    Icon: Linkedin,
-  },
-];
 
 // Hero is a normal-height section (~one viewport). The frame sequence plays
 // out as a parallax background while the user freely scrolls past — no
@@ -100,7 +88,7 @@ export function Hero() {
             </a>
 
             <a
-              href="https://buymeacoffee.com/dylan.coleman"
+              href={BUY_ME_A_COFFEE}
               target="_blank"
               rel="noopener noreferrer"
               className="liquid-glass inline-flex h-10 items-center gap-2 rounded-full px-5 text-sm text-foreground/90 transition-colors hover:text-foreground"
@@ -115,7 +103,7 @@ export function Hero() {
               className="mx-1 hidden h-5 w-px bg-foreground/15 sm:block"
             />
 
-            {socials.map(({ label, href, Icon }) => (
+            {SOCIALS.map(({ label, href, Icon }) => (
               <a
                 key={label}
                 href={href}

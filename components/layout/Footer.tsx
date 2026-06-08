@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { Coffee } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { BUY_ME_A_COFFEE } from "@/content/social";
 
 const links = [
   { label: "Privacy", href: "/" },
   { label: "Terms", href: "/" },
   { label: "Contact", href: "/#contact" },
 ];
-
-const BUY_ME_A_COFFEE = "https://buymeacoffee.com/dylan.coleman";
 
 export function Footer() {
   const year = new Date().getFullYear();

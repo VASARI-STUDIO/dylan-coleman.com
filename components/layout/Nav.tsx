@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Coffee } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { SOCIALS, BUY_ME_A_COFFEE } from "@/content/social";
 
 const links = [
   { label: "Work", href: "/#work" },
@@ -7,6 +9,9 @@ const links = [
   { label: "Shop", href: "/#shop" },
   { label: "About", href: "/#about" },
 ];
+
+const iconButton =
+  "liquid-glass grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition-colors hover:text-foreground";
 
 export function Nav() {
   return (
@@ -38,6 +43,33 @@ export function Nav() {
             </span>
           ))}
         </nav>
+
+        {/* Action cluster — mirrors the hero links, in compact icon form */}
+        <div className="flex items-center gap-2 shrink-0">
+          <a
+            href={BUY_ME_A_COFFEE}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Buy me a coffee"
+            title="Buy me a coffee"
+            className={iconButton}
+          >
+            <Coffee className="h-4 w-4" strokeWidth={1.5} />
+          </a>
+          {SOCIALS.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              title={label}
+              className={iconButton}
+            >
+              <Icon className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+          ))}
+        </div>
       </div>
     </header>
   );
