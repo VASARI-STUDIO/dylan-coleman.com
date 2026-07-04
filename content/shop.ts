@@ -22,12 +22,13 @@ export const SHOP: ShopItem[] = [
     index: "T/01",
     title: "UIL4B — Design Toolkit",
     blurb:
-      "Free browser-based toolkit. Colour palettes, type scales, font pairing, icon library, image conversion, video-frame extraction, production-ready CSS exports — all in one place, no install, no signup.",
+      "A free, in-browser workspace for building UI systems — colour, type, UI components, icons & emoji, imagery and AI in one place. Build, validate and export your interface foundations. No install, no credit card.",
     audience: "designers-builders",
     platform: "Web app",
     price: "Free",
+    cover: "/work/uil4b/02-colour.webp",
     ctaLabel: "Open the toolkit",
-    externalUrl: "https://www.uil4b.com/",
+    externalUrl: "https://uil4b.com/",
     status: "Free",
   },
   {

@@ -23,6 +23,9 @@ next-env.d.ts
 .vercel
 .turbo
 
+# Playwright MCP scratch (snapshots, console logs)
+.playwright-mcp/
+
 # Hero frame source folders — committed output lives in public/hero/frames
 Graphics/Hero Components/Portfolio Hero Frames/
 Graphics/Hero Components/frames for claude/
