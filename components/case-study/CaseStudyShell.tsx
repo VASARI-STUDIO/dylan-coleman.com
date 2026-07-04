@@ -4,7 +4,7 @@ import { Rule } from "@/components/ui/Rule";
 import { IndustryTag } from "@/components/ui/IndustryTag";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { asset } from "@/lib/asset";
-import type { WorkItem, GalleryImage } from "@/content/work/_recent";
+import type { WorkItem, GalleryImage } from "@/content/work";
 
 const ratioClass: Record<NonNullable<GalleryImage["ratio"]>, string> = {
   portrait: "aspect-[4/5]",

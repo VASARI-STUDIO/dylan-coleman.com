@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CaseStudyShell } from "@/components/case-study/CaseStudyShell";
-import { HERO_WORK } from "@/content/work/_recent";
+import { HERO_WORK, getWorkBySlug } from "@/content/work";
 
 // Statically generated case study route — fully data-driven, no MDX import needed.
 export function generateStaticParams() {
@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const item = HERO_WORK.find((w) => w.slug === slug);
+  const item = getWorkBySlug(slug);
   if (!item) return {};
   return {
     title: item.title,
@@ -33,7 +33,7 @@ export default async function CaseStudyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const item = HERO_WORK.find((w) => w.slug === slug);
+  const item = getWorkBySlug(slug);
   if (!item) notFound();
 
   // Pick the "next" hero study (the other one).

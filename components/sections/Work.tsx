@@ -7,7 +7,7 @@ import { ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { IndustryTag } from "@/components/ui/IndustryTag";
 import { FadeUp } from "@/components/ui/FadeUp";
-import { HERO_WORK, type WorkItem } from "@/content/work/_recent";
+import { HERO_WORK, type WorkItem } from "@/content/work";
 import { asset } from "@/lib/asset";
 
 // Full-width scroll-list of projects. Each row spans 90vh, holds the visitor's
