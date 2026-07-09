@@ -2,7 +2,7 @@ import type { WorkItem } from "./types";
 
 export const uil4b: WorkItem = {
   slug: "uil4b",
-  index: "W/01",
+  index: "W/02",
   title: "UIL4B",
   client: "Self-published product",
   year: "2026",

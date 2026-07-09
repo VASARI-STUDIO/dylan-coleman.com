@@ -2,7 +2,7 @@ import type { WorkItem } from "./types";
 
 export const bmsSalesSite: WorkItem = {
   slug: "3d-design",
-  index: "W/04",
+  index: "W/05",
   title: "Building Management Sales Site",
   client: "Bar-Tech Automation",
   year: "2026",

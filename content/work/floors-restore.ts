@@ -3,7 +3,7 @@ import type { WorkItem } from "./types";
 // Home-card-only entry (no /work/[slug] detail page — slug left empty).
 export const floorsRestore: WorkItem = {
   slug: "",
-  index: "W/06",
+  index: "W/07",
   title: "Floors Restore & More",
   client: "Floors Restore",
   year: "2026",

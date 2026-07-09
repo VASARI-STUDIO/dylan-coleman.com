@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Rule } from "@/components/ui/Rule";
 import { IndustryTag } from "@/components/ui/IndustryTag";
 import { FadeUp } from "@/components/ui/FadeUp";
@@ -87,6 +87,17 @@ export function CaseStudyShell({
               <span className="smallcaps">{meta.location}</span>
             )}
             <span className="smallcaps">{meta.status ?? meta.year}</span>
+            {meta.liveUrl && (
+              <a
+                href={meta.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Visit live site
+                <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+              </a>
+            )}
           </div>
         </FadeUp>
       </div>

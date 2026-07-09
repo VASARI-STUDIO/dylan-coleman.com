@@ -10,6 +10,7 @@
 // to RECENT_WORK instead (see `campus-map.ts`).
 
 import type { WorkItem } from "./types";
+import { sparkElectrical } from "./spark-electrical";
 import { uil4b } from "./uil4b";
 import { adamAndEmily } from "./adam-and-emily";
 import { finishLine } from "./finish-line";
@@ -19,6 +20,7 @@ import { floorsRestore } from "./floors-restore";
 
 /** Full /work/[slug] case studies, in display order. */
 export const HERO_WORK: WorkItem[] = [
+  sparkElectrical,
   uil4b,
   adamAndEmily,
   finishLine,

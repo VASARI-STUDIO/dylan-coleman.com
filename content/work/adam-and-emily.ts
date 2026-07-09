@@ -2,7 +2,7 @@ import type { WorkItem } from "./types";
 
 export const adamAndEmily: WorkItem = {
   slug: "adam-and-emily",
-  index: "W/02",
+  index: "W/03",
   title: "Adam & Emily",
   client: "Self-published template",
   year: "2026",

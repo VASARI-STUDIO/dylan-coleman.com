@@ -26,6 +26,8 @@ export type WorkItem = {
   cover?: string;
   /** Path under /public for the case study page hero (without basePath). */
   hero?: string;
+  /** External link to a live, visitable demo of the project. */
+  liveUrl?: string;
 
   // Brochure fields (only used by hero case studies)
   blurb?: string;

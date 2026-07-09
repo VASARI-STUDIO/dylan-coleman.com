@@ -2,7 +2,7 @@ import type { WorkItem } from "./types";
 
 export const finishLine: WorkItem = {
   slug: "finish-line",
-  index: "W/03",
+  index: "W/04",
   title: "Finish Line Car Detailing",
   client: "Self-founded",
   year: "2020 — 2023",
