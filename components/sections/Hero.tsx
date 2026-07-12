@@ -2,9 +2,9 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { Coffee, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { HeroFrames } from "@/components/sections/HeroFrames";
-import { SOCIALS, BUY_ME_A_COFFEE } from "@/content/social";
+import { SOCIALS } from "@/content/social";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 20 },
@@ -85,16 +85,6 @@ export function Hero() {
             >
               <Mail className="h-4 w-4" strokeWidth={1.5} />
               Contact
-            </a>
-
-            <a
-              href={BUY_ME_A_COFFEE}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="liquid-glass inline-flex h-10 items-center gap-2 rounded-full px-5 text-sm text-foreground/90 transition-colors hover:text-foreground"
-            >
-              <Coffee className="h-4 w-4" strokeWidth={1.5} />
-              Buy me a coffee
             </a>
 
             {/* Divider, then the social icon buttons sitting alongside */}

@@ -11,7 +11,7 @@ export function Services() {
       <div className="mx-auto max-w-page px-6 md:px-12 py-24 md:py-36">
         <FadeUp>
           <SectionHeader
-            index="02"
+            index="01"
             label="Working Together"
             title={
               <>

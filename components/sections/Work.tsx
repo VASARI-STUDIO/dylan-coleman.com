@@ -27,7 +27,7 @@ export function Work() {
       <div className="mx-auto max-w-page px-6 md:px-12 pt-24 md:pt-36 pb-12 md:pb-16">
         <FadeUp>
           <SectionHeader
-            index="01"
+            index="02"
             label="Selected Work"
             title={
               <>
