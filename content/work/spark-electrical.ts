@@ -20,6 +20,12 @@ export const sparkElectrical: WorkItem = {
   status: "Live · Available as a starting template",
   duration: "Ongoing",
   photography: "AI-generated / demo imagery",
+  metrics: [
+    { value: "9", label: "Service pages" },
+    { value: "3", label: "Project case studies" },
+    { value: "1", label: "Live savings calculator" },
+    { value: "0", label: "Backend required" },
+  ],
   salesPoints: [
     {
       heading: "A complete site, not a landing page",
@@ -43,36 +49,50 @@ export const sparkElectrical: WorkItem = {
       src: "/work/spark-electrical/00-hero.jpg",
       alt: "Spark Electrical — homepage hero, Reliable South East QLD Electricians",
       ratio: "wide",
+      caption:
+        "The homepage opens on the two things an electrician is actually hired for: trust and availability. The call-out banner stays pinned, so the phone number never scrolls away.",
     },
     {
       src: "/work/spark-electrical/01-switchboard.webp",
       alt: "Spark Electrical — switchboard upgrade in progress",
       ratio: "landscape",
+      caption:
+        "Switchboard upgrades — one of nine service pages, each generated from a typed data source so the copy, schema and internal links stay consistent.",
     },
     {
       src: "/work/spark-electrical/02-led-conversion.webp",
       alt: "Spark Electrical — LED downlight conversion, Tarragindi",
       ratio: "landscape",
-    },
-    {
-      src: "/work/spark-electrical/03-yard-lighting.webp",
-      alt: "Spark Electrical — landscape lighting, Broadbeach Waters",
-      ratio: "landscape",
-    },
-    {
-      src: "/work/spark-electrical/04-team.webp",
-      alt: "Spark Electrical — the team, branded van",
-      ratio: "landscape",
-    },
-    {
-      src: "/work/spark-electrical/05-security.webp",
-      alt: "Spark Electrical — security camera installation",
-      ratio: "landscape",
+      caption:
+        "The Tarragindi LED conversion, and the story behind the savings calculator: drag the slider, watch annual kWh and dollars move.",
     },
     {
       src: "/work/spark-electrical/06-bakery-switchboard.webp",
       alt: "Spark Electrical — bakery switchboard, post emergency repair",
       ratio: "landscape",
+      caption:
+        "A 3am call-out that saved a West End bakery's trading day. Specific street, specific outcome — the detail that makes a small operator read as established.",
+    },
+    {
+      src: "/work/spark-electrical/03-yard-lighting.webp",
+      alt: "Spark Electrical — landscape lighting, Broadbeach Waters",
+      ratio: "landscape",
+      caption:
+        "Waterfront yard lighting in Broadbeach Waters, shot as the third of three project narratives carrying the site.",
+    },
+    {
+      src: "/work/spark-electrical/05-security.webp",
+      alt: "Spark Electrical — security camera installation",
+      ratio: "landscape",
+      caption:
+        "Security and camera installation — the upsell path, positioned by the outcome it solves rather than the hardware it sells.",
+    },
+    {
+      src: "/work/spark-electrical/04-team.webp",
+      alt: "Spark Electrical — the team, branded van",
+      ratio: "landscape",
+      caption:
+        "The branded van and team shot that closes the site. Livery, uniform and mark all drawn from the same identity as the web build.",
     },
   ],
 };

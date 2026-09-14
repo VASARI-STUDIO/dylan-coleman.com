@@ -36,8 +36,12 @@ export default async function CaseStudyPage({
   const item = getWorkBySlug(slug);
   if (!item) notFound();
 
-  // Pick the "next" hero study (the other one).
-  const next = HERO_WORK.find((w) => w.slug !== slug);
+  // Walk to the next hero study in display order, wrapping at the end, so a
+  // reader can page through the whole collection instead of bouncing between
+  // the same two entries.
+  const i = HERO_WORK.findIndex((w) => w.slug === slug);
+  const next =
+    HERO_WORK.length > 1 ? HERO_WORK[(i + 1) % HERO_WORK.length] : undefined;
 
   return <CaseStudyShell meta={item} next={next} />;
 }

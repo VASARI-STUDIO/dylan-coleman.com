@@ -5,6 +5,18 @@ export type GalleryImage = {
   alt: string;
   /** "portrait" = 4:5, "landscape" = 16:9, "square" = 1:1, "wide" = 21:9 */
   ratio?: "portrait" | "landscape" | "square" | "wide";
+  /**
+   * Short visible caption under the image. `alt` stays the accessibility
+   * description; this is the line a reader actually sees, so write it as
+   * commentary ("what this shows and why it matters"), not a repeat of alt.
+   */
+  caption?: string;
+};
+
+/** A single "at a glance" figure — rendered as a value over a small-caps label. */
+export type Metric = {
+  label: string;
+  value: string;
 };
 
 export type SalesPoint = {
@@ -39,5 +51,10 @@ export type WorkItem = {
   duration?: string;
   /** Audience-targeted brochure pitch — facts + sales points framed for the target industry. */
   salesPoints?: SalesPoint[];
+  /**
+   * Hard numbers for the "At a glance" strip. Keep these to facts that are
+   * verifiable from the shipped project — 3 to 5 reads best.
+   */
+  metrics?: Metric[];
   gallery?: GalleryImage[];
 };

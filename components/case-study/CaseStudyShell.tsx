@@ -3,6 +3,7 @@ import { ArrowRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Rule } from "@/components/ui/Rule";
 import { IndustryTag } from "@/components/ui/IndustryTag";
 import { FadeUp } from "@/components/ui/FadeUp";
+import { Button } from "@/components/ui/Button";
 import { asset } from "@/lib/asset";
 import type { WorkItem, GalleryImage } from "@/content/work";
 
@@ -13,24 +14,65 @@ const ratioClass: Record<NonNullable<GalleryImage["ratio"]>, string> = {
   wide: "aspect-[21/9]",
 };
 
-function ImageSlot({ img }: { img: GalleryImage }) {
+function ImageSlot({
+  img,
+  rounded = false,
+}: {
+  img: GalleryImage;
+  rounded?: boolean;
+}) {
   const ratio = ratioClass[img.ratio ?? "landscape"];
   return (
-    <figure className={`relative w-full ${ratio} bg-card overflow-hidden`}>
-      {img.src ? (
-        <img
-          src={asset(img.src)}
-          alt={img.alt}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      ) : (
-        <div className="grid h-full place-items-center text-muted-foreground">
-          <span className="smallcaps">{img.alt}</span>
-        </div>
+    <figure>
+      <div
+        className={`relative w-full ${ratio} bg-card overflow-hidden ${
+          rounded ? "rounded-2xl" : ""
+        }`}
+      >
+        {img.src ? (
+          <img
+            src={asset(img.src)}
+            alt={img.alt}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          <div className="grid h-full place-items-center text-muted-foreground">
+            <span className="smallcaps">{img.alt}</span>
+          </div>
+        )}
+      </div>
+      {img.caption && (
+        <figcaption className="mt-3 max-w-prose text-sm text-muted-foreground">
+          {img.caption}
+        </figcaption>
       )}
     </figure>
   );
+}
+
+/**
+ * Group the gallery into alternating blocks so a long sequence doesn't read as
+ * one monotonous stack of identical frames: `wide` images break out full-bleed
+ * as punctuation, and every run between them collapses into a contained
+ * two-up grid. Source order is always preserved.
+ */
+type Block =
+  | { kind: "bleed"; img: GalleryImage }
+  | { kind: "grid"; imgs: GalleryImage[] };
+
+function toBlocks(gallery: GalleryImage[]): Block[] {
+  const blocks: Block[] = [];
+  for (const img of gallery) {
+    if (img.ratio === "wide") {
+      blocks.push({ kind: "bleed", img });
+      continue;
+    }
+    const last = blocks[blocks.length - 1];
+    if (last?.kind === "grid") last.imgs.push(img);
+    else blocks.push({ kind: "grid", imgs: [img] });
+  }
+  return blocks;
 }
 
 export function CaseStudyShell({
@@ -40,6 +82,8 @@ export function CaseStudyShell({
   meta: WorkItem;
   next?: WorkItem;
 }) {
+  const blocks = meta.gallery?.length ? toBlocks(meta.gallery) : [];
+
   return (
     <article>
       {/* Top utility row */}
@@ -81,26 +125,42 @@ export function CaseStudyShell({
           <h1 className="font-sans text-display font-medium tight-tracking max-w-[18ch]">
             {meta.title}
           </h1>
+          <p className="mt-8 max-w-prose text-body-lg text-muted-foreground">
+            {meta.summary}
+          </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-3 text-sm">
             <IndustryTag k={meta.audience} />
-            {meta.location && (
-              <span className="smallcaps">{meta.location}</span>
-            )}
+            {meta.location && <span className="smallcaps">{meta.location}</span>}
             <span className="smallcaps">{meta.status ?? meta.year}</span>
-            {meta.liveUrl && (
-              <a
-                href={meta.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Visit live site
-                <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} />
-              </a>
-            )}
           </div>
+          {meta.liveUrl && (
+            <div className="mt-10">
+              <Button href={meta.liveUrl} external variant="solid">
+                Visit the live site
+                <ArrowUpRight className="ml-2 h-4 w-4" strokeWidth={1.5} />
+              </Button>
+            </div>
+          )}
         </FadeUp>
       </div>
+
+      {/* At a glance — hard numbers before the pitch */}
+      {meta.metrics && meta.metrics.length > 0 && (
+        <div className="border-t border-border/40">
+          <FadeUp>
+            <dl className="mx-auto grid max-w-page grid-cols-2 gap-y-10 gap-x-8 px-6 md:px-12 py-12 md:grid-cols-4 md:py-16">
+              {meta.metrics.map((m) => (
+                <div key={m.label}>
+                  <dd className="font-sans text-h3 font-medium tight-tracking">
+                    {m.value}
+                  </dd>
+                  <dt className="smallcaps mt-2">{m.label}</dt>
+                </div>
+              ))}
+            </dl>
+          </FadeUp>
+        </div>
+      )}
 
       {/* Spec table — small-caps labels, sparse */}
       <div className="border-t border-border/40">
@@ -191,15 +251,51 @@ export function CaseStudyShell({
         </section>
       )}
 
-      {/* Gallery — full-bleed sequence */}
-      {meta.gallery && meta.gallery.length > 0 && (
+      {/* Gallery — full-bleed punctuation between contained two-up grids */}
+      {blocks.length > 0 && (
         <section className="border-t border-border/40 bg-background">
-          <div className="space-y-2">
-            {meta.gallery.map((img, i) => (
-              <FadeUp key={i} delay={0.05 + i * 0.05}>
-                <ImageSlot img={img} />
-              </FadeUp>
-            ))}
+          <div className="py-16 md:py-24 space-y-16 md:space-y-24">
+            {blocks.map((block, bi) =>
+              block.kind === "bleed" ? (
+                <FadeUp key={bi}>
+                  <ImageSlot img={block.img} />
+                </FadeUp>
+              ) : (
+                <div
+                  key={bi}
+                  className="mx-auto grid max-w-page gap-10 px-6 md:grid-cols-2 md:gap-12 md:px-12"
+                >
+                  {block.imgs.map((img, i) => (
+                    <FadeUp key={i} delay={0.05 + i * 0.05}>
+                      <ImageSlot img={img} rounded />
+                    </FadeUp>
+                  ))}
+                </div>
+              ),
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Closing CTA — send the reader to the thing itself */}
+      {meta.liveUrl && (
+        <section className="border-t border-border/40">
+          <div className="mx-auto max-w-page px-6 md:px-12 py-16 md:py-24">
+            <FadeUp>
+              <p className="smallcaps">See it running</p>
+              <h2 className="mt-6 font-sans text-h2 font-medium tight-tracking max-w-[20ch]">
+                Screenshots only go so far.
+              </h2>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Button href={meta.liveUrl} external variant="solid">
+                  Open {meta.title}
+                  <ArrowUpRight className="ml-2 h-4 w-4" strokeWidth={1.5} />
+                </Button>
+                <Button href="/#contact" variant="outline">
+                  Start a project
+                </Button>
+              </div>
+            </FadeUp>
           </div>
         </section>
       )}
