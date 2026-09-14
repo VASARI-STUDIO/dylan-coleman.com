@@ -8,6 +8,15 @@ import { SHOP } from "@/content/shop";
 import { asset } from "@/lib/asset";
 
 export function Shop() {
+  // Products plus the trailing coming-soon ghost. With only a couple of cards a
+  // three-up grid leaves a dead column, so narrow the shelf instead of
+  // stretching the cards to fill it.
+  const cardCount = SHOP.length + 1;
+  const gridClass =
+    cardCount <= 2
+      ? "mt-16 grid max-w-3xl gap-8 sm:grid-cols-2"
+      : "mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3";
+
   return (
     <section id="shop" className="scroll-mt-24 border-t border-border/40">
       <div className="mx-auto max-w-page px-6 md:px-12 py-24 md:py-36">
@@ -25,7 +34,7 @@ export function Shop() {
           />
         </FadeUp>
 
-        <ol className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <ol className={gridClass}>
           {SHOP.map((p, i) => (
             <FadeUp key={p.id} delay={0.1 + i * 0.1}>
               <li className="flex h-full flex-col overflow-hidden rounded-2xl bg-card">

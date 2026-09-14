@@ -3,7 +3,7 @@ import type { WorkItem } from "./types";
 // Home-card-only entry (no /work/[slug] detail page — slug left empty).
 export const campusMap: WorkItem = {
   slug: "",
-  index: "W/06",
+  index: "W/05",
   title: "Campus & Site Map",
   client: "Bar-Tech Automation",
   year: "2026",

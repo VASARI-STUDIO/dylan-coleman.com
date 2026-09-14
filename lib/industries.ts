@@ -17,10 +17,6 @@ export const INDUSTRIES = {
     label: "Restoration & Trades",
     short: "Restoration",
   },
-  weddings: {
-    label: "Weddings & Events",
-    short: "Weddings",
-  },
   "designers-builders": {
     label: "Designers & Builders",
     short: "Designers / Builders",

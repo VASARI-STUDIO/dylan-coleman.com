@@ -12,7 +12,6 @@
 import type { WorkItem } from "./types";
 import { sparkElectrical } from "./spark-electrical";
 import { uil4b } from "./uil4b";
-import { adamAndEmily } from "./adam-and-emily";
 import { finishLine } from "./finish-line";
 import { bmsSalesSite } from "./3d-design";
 import { campusMap } from "./campus-map";
@@ -22,7 +21,6 @@ import { floorsRestore } from "./floors-restore";
 export const HERO_WORK: WorkItem[] = [
   sparkElectrical,
   uil4b,
-  adamAndEmily,
   finishLine,
   bmsSalesSite,
 ];
@@ -37,4 +35,4 @@ export function getWorkBySlug(slug: string): WorkItem | undefined {
   return ALL_WORK.find((w) => w.slug === slug);
 }
 
-export type { WorkItem, GalleryImage, SalesPoint } from "./types";
+export type { WorkItem, GalleryImage, SalesPoint, Metric } from "./types";

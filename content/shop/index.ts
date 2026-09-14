@@ -8,9 +8,8 @@
 
 import type { ShopItem } from "./types";
 import { uil4b } from "./uil4b";
-import { adamAndEmily } from "./adam-and-emily";
 
-export const SHOP: ShopItem[] = [uil4b, adamAndEmily];
+export const SHOP: ShopItem[] = [uil4b];
 
 /** Look up a product by its id. */
 export function getShopItem(id: string): ShopItem | undefined {
