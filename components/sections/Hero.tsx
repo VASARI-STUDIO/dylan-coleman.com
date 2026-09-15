@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Mail } from "lucide-react";
 import { HeroFrames } from "@/components/sections/HeroFrames";
 import { SOCIALS } from "@/content/social";
+import { HERO_FACTS } from "@/content/claims";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 20 },
@@ -124,22 +125,12 @@ export function Hero() {
           {...fade(0.45)}
           className="grid w-full grid-cols-2 gap-4 md:grid-cols-4 text-left text-sm"
         >
-          <div>
-            <dt className="smallcaps">Discipline</dt>
-            <dd className="mt-1 text-foreground">Brand &amp; Web</dd>
-          </div>
-          <div>
-            <dt className="smallcaps">Based</dt>
-            <dd className="mt-1 text-foreground">Brisbane, Australia · Remote</dd>
-          </div>
-          <div>
-            <dt className="smallcaps">Working with</dt>
-            <dd className="mt-1 text-foreground">Founders &amp; Studios</dd>
-          </div>
-          <div>
-            <dt className="smallcaps">Status</dt>
-            <dd className="mt-1 text-foreground">Booking late 2026</dd>
-          </div>
+          {HERO_FACTS.map((f) => (
+            <div key={f.label}>
+              <dt className="smallcaps">{f.label}</dt>
+              <dd className="mt-1 text-foreground">{f.value}</dd>
+            </div>
+          ))}
         </motion.dl>
       </div>
     </section>

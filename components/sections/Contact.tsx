@@ -6,6 +6,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { BUSINESS } from "@/content/legal";
+import { CONTACT_PROMISES } from "@/content/claims";
 import { asset } from "@/lib/asset";
 
 const PROJECT_TYPES = ["Brand website", "Landing page", "Template customisation", "Other"];
@@ -110,15 +111,17 @@ export function Contact() {
 
             <Rule className="my-8" />
 
-            <p className="smallcaps">Response time</p>
+            <p className="smallcaps">{CONTACT_PROMISES.responseTime.label}</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Within two business days. If it&apos;s urgent, say so in the brief.
+              {CONTACT_PROMISES.responseTime.value}
             </p>
 
             <Rule className="my-8" />
 
-            <p className="smallcaps">Currently booking</p>
-            <p className="mt-2 text-sm text-muted-foreground">Late-2026.</p>
+            <p className="smallcaps">{CONTACT_PROMISES.availability.label}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {CONTACT_PROMISES.availability.value}
+            </p>
           </FadeUp>
 
           <FadeUp className="md:col-span-8" delay={0.2}>

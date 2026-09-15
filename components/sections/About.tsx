@@ -5,15 +5,9 @@ import { ScrollRevealParagraph } from "@/components/ui/ScrollReveal";
 import Image from "next/image";
 import { asset } from "@/lib/asset";
 import { PRINCIPLES } from "@/content/principles";
+import { ABOUT_STATS } from "@/content/claims";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-const stats = [
-  { k: "Practicing", v: "5+ years" },
-  { k: "Projects shipped", v: "45+" },
-  { k: "Based", v: "Brisbane, AU" },
-  { k: "Currently", v: "Bar-Tech · Freelance" },
-];
 
 export function About() {
   return (
@@ -96,10 +90,10 @@ export function About() {
             </div>
 
             <dl className="grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4 text-sm">
-              {stats.map((s) => (
-                <div key={s.k}>
-                  <dt className="smallcaps">{s.k}</dt>
-                  <dd className="mt-1 text-foreground">{s.v}</dd>
+              {ABOUT_STATS.map((s) => (
+                <div key={s.label}>
+                  <dt className="smallcaps">{s.label}</dt>
+                  <dd className="mt-1 text-foreground">{s.value}</dd>
                 </div>
               ))}
             </dl>
