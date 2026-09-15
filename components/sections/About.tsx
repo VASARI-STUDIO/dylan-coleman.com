@@ -35,7 +35,7 @@ export function About() {
       <div className="mx-auto max-w-page px-6 md:px-12 py-24 md:py-36">
         <FadeUp>
           <SectionHeader
-            index="05"
+            index="04"
             label="About"
             title={
               <>
@@ -50,7 +50,7 @@ export function About() {
           <FadeUp className="md:col-span-5" delay={0.1}>
             <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl bg-card">
               <img
-                src={asset("/about/portrait.jpg")}
+                src={asset("/about/portrait.webp")}
                 alt="Dylan Coleman"
                 loading="lazy"
                 className="absolute inset-0 h-full w-full object-cover"

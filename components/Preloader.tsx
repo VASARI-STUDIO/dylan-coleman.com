@@ -4,15 +4,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
+import { onHeroReady } from "@/lib/hero-ready";
 
 // Elegant one-shot preloader. Mounts at app boot, holds for a minimum
 // duration so the brand mark has a beat to land, then performs a curtain
 // reveal that slides up and exposes the site beneath.
 //
+// We used to wait on `window.load`, but that does not fire until EVERY image
+// has downloaded — including the whole hero frame sequence. On a first visit
+// the curtain sat for its full timeout and then lifted onto a blank canvas.
+// Now we lift as soon as the hero's first frame is painted, which is the only
+// thing actually behind the curtain.
+//
 // Minimum visible time: 1100ms (the mark feels intentional)
-// Maximum wait for `load`: 2500ms (don't ever block a slow image)
+// Maximum wait for the hero: 2200ms (never block on a slow connection)
 const MIN_VISIBLE_MS = 1100;
-const MAX_WAIT_MS = 2500;
+const MAX_WAIT_MS = 2200;
 
 export function Preloader() {
   // The intro is a homepage-entry moment only. If the visitor's first paint is a
@@ -40,20 +47,20 @@ export function Preloader() {
       }, remaining);
     };
 
-    const onLoad = () => finish();
-
-    if (document.readyState === "complete") {
+    let settled = false;
+    const settle = () => {
+      if (settled) return;
+      settled = true;
       finish();
-    } else {
-      window.addEventListener("load", onLoad, { once: true });
-      // Fallback — never wait forever on a slow image
-      window.setTimeout(() => {
-        if (document.readyState !== "complete") finish();
-      }, MAX_WAIT_MS);
-    }
+    };
+
+    // Whichever comes first: the hero's first frame, or the hard cap.
+    const unsubscribe = onHeroReady(settle);
+    const cap = window.setTimeout(settle, MAX_WAIT_MS);
 
     return () => {
-      window.removeEventListener("load", onLoad);
+      unsubscribe();
+      window.clearTimeout(cap);
       document.documentElement.classList.remove("is-preloading");
     };
   }, []);

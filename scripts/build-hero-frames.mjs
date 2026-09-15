@@ -4,14 +4,15 @@
 // frame-NNN.webp, writes to public/hero/frames, and emits both a JSON
 // manifest and a TS module so the component count stays in sync.
 //
-// Source can be either:
-//   - PNG sequence  → re-encoded with sharp at WIDTH / QUALITY below
-//   - WebP sequence → copied as-is (used when frames are already optimised)
+// Source is a PNG or WebP sequence; either way frames are re-encoded with
+// sharp at WIDTH / QUALITY below. WebP sources used to be copied through
+// untouched, which shipped a 14 MB sequence — exporters routinely emit WebP at
+// a quality far above what a full-bleed background canvas needs.
 //
 // Set FRAME_COUNT to 0 to use every source frame; positive numbers sample
 // evenly across the sequence.
 
-import { readdir, mkdir, writeFile, rm, copyFile } from "node:fs/promises";
+import { readdir, mkdir, writeFile, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
@@ -25,10 +26,11 @@ const OUT = "public/hero/frames";
 const MANIFEST = "public/hero/manifest.json";
 const TS_MANIFEST = "lib/hero-frames.ts";
 
-// Used only when source is PNG (re-encoded). Ignored for WebP source.
+// Applied to every source format. Q72 at 1920px is visually indistinguishable
+// from the raw export on this footage and roughly 5x smaller.
 const FRAME_COUNT = 0;
 const WIDTH = 1920;
-const QUALITY = 82;
+const QUALITY = 72;
 
 async function main() {
   const SRC = SRC_CANDIDATES.find((p) => existsSync(p));
@@ -53,10 +55,9 @@ async function main() {
   if (existsSync(OUT)) await rm(OUT, { recursive: true });
   await mkdir(OUT, { recursive: true });
 
-  // Sample if requested AND source is PNG (no point sampling pre-built WebPs;
-  // the user already chose the count when they exported them).
+  // Sample evenly across the sequence when FRAME_COUNT is set.
   let selected;
-  if (!isWebp && FRAME_COUNT > 0 && FRAME_COUNT < all.length) {
+  if (FRAME_COUNT > 0 && FRAME_COUNT < all.length) {
     selected = [];
     const span = all.length - 1;
     const steps = FRAME_COUNT - 1;
@@ -70,35 +71,20 @@ async function main() {
 
   let totalBytes = 0;
 
-  if (isWebp) {
-    console.log(`Copying ${selected.length} WebP frames as-is`);
-    for (let i = 0; i < selected.length; i++) {
-      const src = path.join(SRC, selected[i]);
-      const out = path.join(OUT, `frame-${String(i + 1).padStart(3, "0")}.webp`);
-      await copyFile(src, out);
-      const { statSync } = await import("node:fs");
-      const size = statSync(out).size;
-      totalBytes += size;
-      process.stdout.write(
-        `\r  ${String(i + 1).padStart(3, "0")}/${selected.length} · ${(size / 1024).toFixed(0)} KB    `,
-      );
-    }
-  } else {
-    console.log(
-      `Encoding ${selected.length} PNG frames → WebP @ ${WIDTH}px Q${QUALITY}`,
+  console.log(
+    `Encoding ${selected.length} ${isWebp ? "WebP" : "PNG"} frames → WebP @ ${WIDTH}px Q${QUALITY}`,
+  );
+  for (let i = 0; i < selected.length; i++) {
+    const src = path.join(SRC, selected[i]);
+    const out = path.join(OUT, `frame-${String(i + 1).padStart(3, "0")}.webp`);
+    const info = await sharp(src)
+      .resize({ width: WIDTH, withoutEnlargement: true })
+      .webp({ quality: QUALITY, effort: 6 })
+      .toFile(out);
+    totalBytes += info.size;
+    process.stdout.write(
+      `\r  ${String(i + 1).padStart(3, "0")}/${selected.length} · ${(info.size / 1024).toFixed(0)} KB    `,
     );
-    for (let i = 0; i < selected.length; i++) {
-      const src = path.join(SRC, selected[i]);
-      const out = path.join(OUT, `frame-${String(i + 1).padStart(3, "0")}.webp`);
-      const info = await sharp(src)
-        .resize({ width: WIDTH, withoutEnlargement: true })
-        .webp({ quality: QUALITY, effort: 6 })
-        .toFile(out);
-      totalBytes += info.size;
-      process.stdout.write(
-        `\r  ${String(i + 1).padStart(3, "0")}/${selected.length} · ${(info.size / 1024).toFixed(0)} KB    `,
-      );
-    }
   }
   console.log();
 
@@ -109,8 +95,8 @@ async function main() {
         count: selected.length,
         source: SRC,
         sourceFormat: isWebp ? "webp" : "png",
-        width: isWebp ? null : WIDTH,
-        quality: isWebp ? null : QUALITY,
+        width: WIDTH,
+        quality: QUALITY,
         totalBytes,
         generatedAt: new Date().toISOString(),
       },
