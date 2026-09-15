@@ -10,7 +10,7 @@ export const bmsSalesSite: WorkItem = {
   summary:
     "A sales website for a Building Management System — re-pointed at mechanical distributors and integrators rather than end users. Custom 3D, technical voice, lead-generation engineered around relationship sales.",
   audience: "b2b-tech",
-  cover: "/work/3d-design/01-cover.png",
+  cover: "/work/3d-design/01-cover.webp",
   hero: "/work/3d-design/02.webp",
   blurb:
     "A re-architected sales site for a Building Management System. The existing site sold to end-buyers; this one sells to the distributors and mechanical integrators who actually move product. The job was to translate a deeply technical product into a story that earned a quote-request, not a checkout.",
@@ -39,7 +39,7 @@ export const bmsSalesSite: WorkItem = {
   ],
   gallery: [
     {
-      src: "/work/3d-design/01-cover.png",
+      src: "/work/3d-design/01-cover.webp",
       alt: "BMS sales site — hero composition",
       ratio: "wide",
     },
@@ -49,7 +49,7 @@ export const bmsSalesSite: WorkItem = {
       ratio: "landscape",
     },
     {
-      src: "/work/3d-design/03.png",
+      src: "/work/3d-design/03.webp",
       alt: "BMS sales site — interface in context",
       ratio: "landscape",
     },

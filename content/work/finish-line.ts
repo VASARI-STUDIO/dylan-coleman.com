@@ -49,7 +49,7 @@ export const finishLine: WorkItem = {
       ratio: "landscape",
     },
     {
-      src: "/work/finish-line/03.jpg",
+      src: "/work/finish-line/03.webp",
       alt: "Finish Line — environment",
       ratio: "landscape",
     },

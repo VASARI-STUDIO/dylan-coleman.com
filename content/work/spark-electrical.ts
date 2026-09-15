@@ -10,8 +10,8 @@ export const sparkElectrical: WorkItem = {
   summary:
     "A full, multi-page site for a domestic electrician business — not a landing page, a working system: nine service pages, three real case studies, a live savings calculator, and a contact flow that reads urgency and reacts.",
   audience: "local-service",
-  cover: "/work/spark-electrical/00-hero.jpg",
-  hero: "/work/spark-electrical/00-hero.jpg",
+  cover: "/work/spark-electrical/00-hero.webp",
+  hero: "/work/spark-electrical/00-hero.webp",
   liveUrl: "https://vasari-studio.github.io/domestic-electrician-website/",
   blurb:
     "Spark Electrical is a self-initiated demo — a fictional South East Queensland electrician business, built to show what a complete trade-business site looks like when it&apos;s treated as a product rather than a brochure. There&apos;s no client here, no invoice; the point was to build the whole thing an agency would deliver for a real electrician and prove every part of it actually works: a live interactive savings calculator, an intent-aware contact form, real project storytelling, and nine SEO-built service pages, all shipped as one fast, accessible, multi-page site.",
@@ -46,7 +46,7 @@ export const sparkElectrical: WorkItem = {
   ],
   gallery: [
     {
-      src: "/work/spark-electrical/00-hero.jpg",
+      src: "/work/spark-electrical/00-hero.webp",
       alt: "Spark Electrical — homepage hero, Reliable South East QLD Electricians",
       ratio: "wide",
       caption:
