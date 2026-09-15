@@ -100,7 +100,12 @@ export function Capabilities() {
 
         <ol className="mt-16 md:mt-20">
           {groups.map((g, i) => (
-            <FadeUp key={g.n} delay={i * 0.06}>
+            <FadeUp
+              as="li"
+              key={g.n}
+              delay={i * 0.06}
+              className="block border-t border-border/40"
+            >
               <CapabilityRow
                 group={g}
                 open={open === g.n}
@@ -128,7 +133,7 @@ function CapabilityRow({
   const labelId = useId();
 
   return (
-    <li className="border-t border-border/40">
+    <>
       <h3>
         <button
           type="button"
@@ -198,6 +203,6 @@ function CapabilityRow({
           </motion.div>
         )}
       </AnimatePresence>
-    </li>
+    </>
   );
 }

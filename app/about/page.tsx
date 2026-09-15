@@ -152,18 +152,18 @@ export default function AboutPage() {
           <FadeUp>
             <h2 className="smallcaps">The practical details</h2>
           </FadeUp>
+          {/* FadeUp renders the <div> that <dl> expects as a direct child — an
+              extra wrapper in between would orphan each dt/dd pair. */}
           <dl className="mt-10 grid gap-10 md:grid-cols-2 md:gap-12">
             {working.map((w, i) => (
               <FadeUp key={w.k} delay={0.05 + i * 0.05}>
-                <div>
-                  <dt className="smallcaps">{w.k}</dt>
-                  <dd className="mt-2 font-sans text-h5 font-medium tight-tracking">
-                    {w.v}
-                  </dd>
-                  <p className="mt-2 text-body-sm text-muted-foreground">
-                    {w.note}
-                  </p>
-                </div>
+                <dt className="smallcaps">{w.k}</dt>
+                <dd className="mt-2 font-sans text-h5 font-medium tight-tracking">
+                  {w.v}
+                </dd>
+                <dd className="mt-2 text-body-sm text-muted-foreground">
+                  {w.note}
+                </dd>
               </FadeUp>
             ))}
           </dl>

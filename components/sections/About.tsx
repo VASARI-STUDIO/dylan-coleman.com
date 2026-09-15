@@ -86,9 +86,9 @@ export function About() {
                 <li key={p.n}>
                   <FadeUp delay={i * 0.08}>
                     <span className="smallcaps">{p.n}</span>
-                    <h4 className="mt-3 font-sans text-h5 font-medium tight-tracking">
+                    <h3 className="mt-3 font-sans text-h5 font-medium tight-tracking">
                       {p.t}
-                    </h4>
+                    </h3>
                     <p className="mt-2 text-sm text-muted-foreground">{p.b}</p>
                   </FadeUp>
                 </li>

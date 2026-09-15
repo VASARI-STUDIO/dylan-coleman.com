@@ -62,7 +62,10 @@ function WorkRow({ item, index }: { item: WorkItem; index: number }) {
     [0, 0.35, 0.5, 0.65, 1],
     [0, 0.6, 1, 0.6, 0],
   );
-  const opacity = useTransform(focus, [0, 1], [0.45, 1]);
+  // Floor sits at 0.72 rather than 0.45: the dimming is a focus cue, but an
+  // off-centre row still has to clear contrast minimums for someone who is
+  // reading rather than scrolling. Rows at rest were failing WCAG AA.
+  const opacity = useTransform(focus, [0, 1], [0.72, 1]);
   const blurbOpacity = useTransform(focus, [0.55, 1], [0, 1]);
   const blurbY = useTransform(focus, [0.55, 1], [12, 0]);
   const imageScale = useTransform(focus, [0, 1], [1.08, 1]);

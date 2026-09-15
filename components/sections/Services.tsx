@@ -26,12 +26,17 @@ export function Services() {
 
         <ol className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s, i) => (
-            <FadeUp key={s.id} delay={0.1 + i * 0.1}>
+            <FadeUp
+              as="li"
+              key={s.id}
+              delay={0.1 + i * 0.1}
+              className="flex"
+            >
               {s.openCta ? (
-                <li className="liquid-glass flex h-full flex-col rounded-2xl p-8 md:p-10">
-                  <div className="flex items-baseline justify-between">
-                    <span className="smallcaps">{s.index}</span>
-                    <span className="smallcaps">Open brief</span>
+                <div className="liquid-glass flex h-full w-full flex-col rounded-2xl p-8 md:p-10">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <span className="smallcaps shrink-0">{s.index}</span>
+                    <span className="smallcaps text-right">Open brief</span>
                   </div>
 
                   <h3 className="mt-6 font-sans text-h3 font-medium tight-tracking">
@@ -49,13 +54,15 @@ export function Services() {
                       </span>
                     </Button>
                   </div>
-                </li>
+                </div>
               ) : (
-                <li className="liquid-glass flex h-full flex-col rounded-2xl p-8 md:p-10">
-                  <div className="flex items-baseline justify-between">
-                    <span className="smallcaps">{s.index}</span>
+                <div className="liquid-glass flex h-full w-full flex-col rounded-2xl p-8 md:p-10">
+                  {/* gap-4 + shrink-0 on the index: a long timeline used to wrap
+                      straight into it, rendering as "S/014 – 8 weeks". */}
+                  <div className="flex items-baseline justify-between gap-4">
+                    <span className="smallcaps shrink-0">{s.index}</span>
                     {s.timeline && (
-                      <span className="smallcaps">{s.timeline}</span>
+                      <span className="smallcaps text-right">{s.timeline}</span>
                     )}
                   </div>
 
@@ -93,7 +100,7 @@ export function Services() {
                       Enquire
                     </Button>
                   </div>
-                </li>
+                </div>
               )}
             </FadeUp>
           ))}

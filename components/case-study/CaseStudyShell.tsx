@@ -209,7 +209,7 @@ export function CaseStudyShell({
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-page px-6 md:px-12 py-16 md:py-24">
             <FadeUp>
-              <p className="smallcaps">For the buyer</p>
+              <h2 className="smallcaps">For the buyer</h2>
             </FadeUp>
             <ol className="mt-10 grid gap-10 md:grid-cols-2">
               {meta.salesPoints.map((p, i) => (
@@ -238,7 +238,7 @@ export function CaseStudyShell({
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-page px-6 md:px-12 py-16 md:py-24 grid gap-12 md:grid-cols-12">
             <FadeUp className="md:col-span-3">
-              <p className="smallcaps">Project note</p>
+              <h2 className="smallcaps">Project note</h2>
             </FadeUp>
             <FadeUp className="md:col-span-9" delay={0.1}>
               <p
@@ -282,7 +282,7 @@ export function CaseStudyShell({
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-page px-6 md:px-12 py-16 md:py-24">
             <FadeUp>
-              <p className="smallcaps">See it running</p>
+              <h2 className="smallcaps">See it running</h2>
               <h2 className="mt-6 font-sans text-h2 font-medium tight-tracking max-w-[20ch]">
                 Screenshots only go so far.
               </h2>
@@ -304,7 +304,7 @@ export function CaseStudyShell({
       {next && (
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-page px-6 md:px-12 py-16">
-            <p className="smallcaps">Up next</p>
+            <h2 className="smallcaps">Up next</h2>
             <Link
               href={`/work/${next.slug}`}
               className="mt-6 group flex items-baseline justify-between gap-6"

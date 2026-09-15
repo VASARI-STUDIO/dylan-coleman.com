@@ -147,7 +147,6 @@ export function HeroFrames({
     if (!ctx) return;
 
     let lastDrawn = -1;
-    let coverRect = { dW: 0, dH: 0, dX: 0, dY: 0 };
 
     /** Nearest frame index that has actually loaded, searching outward. */
     const nearestLoaded = (idx: number): number => {
@@ -165,25 +164,33 @@ export function HeroFrames({
       canvas.width = Math.max(1, Math.floor(rect.width * dpr));
       canvas.height = Math.max(1, Math.floor(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // Recompute object-cover rect from a known-loaded image
-      const sampleIdx = nearestLoaded(0);
-      const sample = sampleIdx >= 0 ? imagesRef.current[sampleIdx] : undefined;
-      if (sample) {
-        const imgAR = sample.naturalWidth / sample.naturalHeight;
-        const boxAR = rect.width / rect.height;
-        if (imgAR > boxAR) {
-          const dH = rect.height;
-          const dW = dH * imgAR;
-          coverRect = { dH, dW, dX: (rect.width - dW) / 2, dY: 0 };
-        } else {
-          const dW = rect.width;
-          const dH = dW / imgAR;
-          coverRect = { dW, dH, dX: 0, dY: (rect.height - dH) / 2 };
-        }
-      }
-
       lastDrawn = -1; // force a redraw at the next paint
+    };
+
+    /**
+     * object-cover geometry for one image against the current canvas box.
+     *
+     * Derived per draw from the image actually being painted rather than
+     * cached from a "sample" frame at setup time. The cached version was a
+     * trap: if the sample lookup missed — which it can, because setup now runs
+     * as soon as the FIRST frame lands rather than after all of them — the
+     * rect stayed {0,0,0,0} for the life of the component and every later
+     * redraw silently painted at zero size onto a blank canvas.
+     */
+    const coverFor = (img: HTMLImageElement, boxW: number, boxH: number) => {
+      const imgAR = img.naturalWidth / img.naturalHeight;
+      const boxAR = boxW / boxH;
+      if (!Number.isFinite(imgAR) || imgAR <= 0) {
+        return { dW: boxW, dH: boxH, dX: 0, dY: 0 };
+      }
+      if (imgAR > boxAR) {
+        const dH = boxH;
+        const dW = dH * imgAR;
+        return { dW, dH, dX: (boxW - dW) / 2, dY: 0 };
+      }
+      const dW = boxW;
+      const dH = dW / imgAR;
+      return { dW, dH, dX: 0, dY: (boxH - dH) / 2 };
     };
 
     const drawAt = (exact: number) => {
@@ -198,7 +205,7 @@ export function HeroFrames({
       if (!imgA) return;
 
       const rect = canvas.getBoundingClientRect();
-      const { dW, dH, dX, dY } = coverRect;
+      const { dW, dH, dX, dY } = coverFor(imgA, rect.width, rect.height);
 
       ctx.clearRect(0, 0, rect.width, rect.height);
       ctx.globalAlpha = 1;

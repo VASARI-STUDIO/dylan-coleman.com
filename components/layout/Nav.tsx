@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Mail, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -14,9 +14,27 @@ const links = [
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  // The header is transparent so it sits cleanly over the hero. Past the hero
+  // it floats over arbitrary page content — project photography included —
+  // which left the wordmark and links at the mercy of whatever scrolled
+  // underneath. Once the page has moved at all, lay down a scrim.
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-20 py-4">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-20 py-4 transition-colors duration-300 ${
+        scrolled || open
+          ? "border-b border-border/40 bg-background/80 backdrop-blur-md"
+          : "border-b border-transparent"
+      }`}
+    >
       <div className="relative mx-auto flex max-w-page items-center justify-between gap-6">
         {/* Brand — left */}
         <Link href="/" className="flex items-center gap-3 shrink-0">
