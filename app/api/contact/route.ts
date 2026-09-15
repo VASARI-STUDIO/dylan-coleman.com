@@ -25,6 +25,47 @@ type Payload = {
 const str = (v: unknown, max: number) =>
   typeof v === "string" ? v.trim().slice(0, max) : "";
 
+/** Environment variable, with blank treated as absent. */
+const env = (key: string) => {
+  const v = process.env[key];
+  return v && v.trim() ? v.trim() : undefined;
+};
+
+/**
+ * Strip anything that could break out of a header value. A name carrying CR or
+ * LF would otherwise be interpolated straight into the Subject and could inject
+ * additional headers.
+ */
+const headerSafe = (v: string) => v.replace(/[\r\n\t]+/g, " ").trim();
+
+/**
+ * Best-effort per-IP throttle. Serverless instances do not share memory, so
+ * this bounds abuse per instance rather than globally — it makes a casual
+ * flood expensive without pulling in a KV store. Swap for a shared store if
+ * this ever gets seriously targeted.
+ */
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 5;
+const hits = new Map<string, number[]>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+
+  // Opportunistic sweep so the map cannot grow without bound.
+  if (hits.size > 500) {
+    for (const [k, v] of hits) {
+      if (!v.some((t) => now - t < WINDOW_MS)) hits.delete(k);
+    }
+  }
+  return recent.length > MAX_PER_WINDOW;
+}
+
+/** Largest body worth reading. The field caps only apply after parsing. */
+const MAX_BODY_BYTES = 16 * 1024;
+
 // Deliberately permissive: the goal is to reject obvious rubbish, not to
 // adjudicate the RFC. A real address that fails a clever regex is a lost lead.
 const looksLikeEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -38,9 +79,36 @@ function escapeHtml(v: string) {
 }
 
 export async function POST(request: Request) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+
+  if (rateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Too many messages. Try again shortly.", fallbackEmail: BUSINESS.email },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
+  }
+
+  const declared = Number(request.headers.get("content-length") ?? 0);
+  if (declared > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "That message is too long." }, { status: 413 });
+  }
+
   let body: Payload;
   try {
-    body = await request.json();
+    const raw = await request.text();
+    if (raw.length > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "That message is too long." }, { status: 413 });
+    }
+    const parsed: unknown = JSON.parse(raw);
+    // A bare `null`, array or string parses fine but is not a payload —
+    // reading properties off it would throw outside this try block.
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return NextResponse.json({ error: "Malformed request." }, { status: 400 });
+    }
+    body = parsed as Payload;
   } catch {
     return NextResponse.json({ error: "Malformed request." }, { status: 400 });
   }
@@ -71,9 +139,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO_EMAIL ?? BUSINESS.email;
-  const from = process.env.CONTACT_FROM_EMAIL;
+  // `??` does not catch "", and .env.example ships these keys blank — copying
+  // it into a hosting dashboard as-is would otherwise resolve `to` to an empty
+  // string and fail every enquiry. Treat empty as unset everywhere.
+  const apiKey = env("RESEND_API_KEY");
+  const from = env("CONTACT_FROM_EMAIL");
+  const to = env("CONTACT_TO_EMAIL") ?? BUSINESS.email;
 
   // Not configured is a server problem, not the visitor's. Say so plainly so
   // the form can offer the direct email address instead of pretending.
@@ -101,7 +172,9 @@ export async function POST(request: Request) {
       from,
       to,
       replyTo: email,
-      subject: `New enquiry — ${name}${project ? ` · ${project}` : ""}`,
+      subject: headerSafe(
+        `New enquiry — ${name}${project ? ` · ${project}` : ""}`,
+      ),
       text: [
         ...rows.map(([k, v]) => `${k}: ${v}`),
         "",

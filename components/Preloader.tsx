@@ -38,10 +38,12 @@ export function Preloader() {
     const start = performance.now();
     document.documentElement.classList.add("is-preloading");
 
+    // Tracked so unmounting mid-reveal cannot fire setShow on a dead component.
+    let revealTimer: number | undefined;
     const finish = () => {
       const elapsed = performance.now() - start;
       const remaining = Math.max(0, MIN_VISIBLE_MS - elapsed);
-      window.setTimeout(() => {
+      revealTimer = window.setTimeout(() => {
         setShow(false);
         document.documentElement.classList.remove("is-preloading");
       }, remaining);
@@ -61,6 +63,7 @@ export function Preloader() {
     return () => {
       unsubscribe();
       window.clearTimeout(cap);
+      if (revealTimer !== undefined) window.clearTimeout(revealTimer);
       document.documentElement.classList.remove("is-preloading");
     };
   }, []);

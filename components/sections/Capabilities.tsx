@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { FadeUp } from "@/components/ui/FadeUp";
@@ -167,42 +167,45 @@ function CapabilityRow({
         </button>
       </h3>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="panel"
-            id={panelId}
-            role="region"
-            aria-labelledby={labelId}
-            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
-            transition={{
-              height: { duration: 0.42, ease: [0.4, 0, 0.2, 1] },
-              opacity: { duration: 0.28, ease: "easeOut" },
-            }}
-            className="overflow-hidden"
-          >
-            <div className="grid grid-cols-12 gap-4 pb-12 md:pb-16">
-              <div className="col-span-12 md:col-span-9 md:col-start-4">
-                <p className="max-w-prose text-body text-muted-foreground">
-                  {group.detail}
-                </p>
-                <ul className="mt-8 flex flex-wrap gap-2">
-                  {group.items.map((item) => (
-                    <li
-                      key={item}
-                      className="rounded-full border border-border/60 px-3 py-1.5 text-sm text-foreground/80"
-                    >
+      {/* The panel stays mounted so aria-controls always resolves. Unmounting it
+          on collapse left the button pointing at an element that did not exist
+          for most of the page's life. `inert` keeps the collapsed content out
+          of the tab order and the accessibility tree. */}
+      <motion.div
+        id={panelId}
+        role="region"
+        aria-labelledby={labelId}
+        inert={!open}
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+        transition={
+          reduceMotion
+            ? { duration: 0 }
+            : {
+                height: { duration: 0.42, ease: [0.4, 0, 0.2, 1] },
+                opacity: { duration: 0.28, ease: "easeOut" },
+              }
+        }
+        className="overflow-hidden"
+      >
+        <div className="grid grid-cols-12 gap-4 pb-12 md:pb-16">
+          <div className="col-span-12 md:col-span-9 md:col-start-4">
+            <p className="max-w-prose text-body text-muted-foreground">
+              {group.detail}
+            </p>
+            <ul className="mt-8 flex flex-wrap gap-2">
+              {group.items.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-full border border-border/60 px-3 py-1.5 text-sm text-foreground/80"
+                >
                       {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </motion.div>
     </>
   );
 }

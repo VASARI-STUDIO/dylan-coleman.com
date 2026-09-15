@@ -208,7 +208,13 @@ export function HeroFrames({
       canvas.width = Math.max(1, Math.floor(rect.width * dpr));
       canvas.height = Math.max(1, Math.floor(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      lastDrawn = -1; // force a redraw at the next paint
+
+      // Assigning canvas.width/height WIPES the bitmap. Marking lastDrawn
+      // dirty only helps if something paints afterwards, and the only painter
+      // is the scroll handler — so resizing without scrolling left the hero
+      // permanently blank. Repaint at the current position immediately.
+      lastDrawn = -1;
+      drawAt(exactRef.current);
     };
 
     /**
@@ -296,6 +302,11 @@ export function HeroFrames({
     // completes well before the visitor exits the hero, leaving headroom for
     // the fade-to-black bridge.
     let st: { kill: () => void } | undefined;
+    // The GSAP import is async, so this effect can be cleaned up before the
+    // trigger exists. Without this flag the late-arriving trigger is never
+    // killed — it keeps firing against a dead canvas and pins the frame
+    // buffers in memory.
+    let disposed = false;
     (async () => {
       const [{ default: gsap }, mod] = await Promise.all([
         import("gsap"),
@@ -319,10 +330,17 @@ export function HeroFrames({
         },
       });
 
+      if (disposed) {
+        st.kill();
+        st = undefined;
+        return;
+      }
+
       ScrollTrigger.refresh();
     })();
 
     return () => {
+      disposed = true;
       redrawRef.current = null;
       window.removeEventListener("resize", resize);
       st?.kill();

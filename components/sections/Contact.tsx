@@ -6,6 +6,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { BUSINESS } from "@/content/legal";
+import { asset } from "@/lib/asset";
 
 const PROJECT_TYPES = ["Brand website", "Landing page", "Template customisation", "Other"];
 // Quoted in Australian dollars — stated explicitly so an overseas enquiry
@@ -38,7 +39,9 @@ export function Contact() {
     try {
       // Trailing slash matters: next.config sets trailingSlash, so posting to
       // "/api/contact" earns a 308 redirect before the handler ever runs.
-      const res = await fetch("/api/contact/", {
+      // asset() prefixes NEXT_PUBLIC_BASE_PATH, so this still resolves if the
+      // site is ever served from a subpath.
+      const res = await fetch(asset("/api/contact/"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
