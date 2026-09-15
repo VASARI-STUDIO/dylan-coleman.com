@@ -23,7 +23,8 @@ export function StructuredData() {
       name: SITE_NAME,
       url: home,
       jobTitle: "Designer & Developer",
-      email: `mailto:${BUSINESS.email}`,
+      // schema.org expects a bare address here, not a mailto: URI.
+      email: BUSINESS.email,
       address: {
         "@type": "PostalAddress",
         addressLocality: "Brisbane",
@@ -41,7 +42,9 @@ export function StructuredData() {
       ],
     },
     {
-      "@type": "ProfessionalService",
+      // LocalBusiness rather than ProfessionalService: schema.org marks the
+      // latter superseded, and LocalBusiness is what search engines consume.
+      "@type": "LocalBusiness",
       "@id": businessId,
       name: BUSINESS.tradingName,
       description: SITE_DESCRIPTION,
@@ -55,9 +58,11 @@ export function StructuredData() {
         addressCountry: "AU",
       },
       areaServed: { "@type": "Country", name: "Australia" },
-      availableLanguage: "en-AU",
       currenciesAccepted: "AUD",
-      priceRange: "A$3,000 – A$20,000+",
+      // Spans the full set of bands the contact form offers, including the
+      // lowest one — an understated floor here would contradict the form.
+      priceRange: "A$0 – A$20,000+",
+      email: BUSINESS.email,
       ...(BUSINESS.abn ? { taxID: BUSINESS.abn } : {}),
     },
     {

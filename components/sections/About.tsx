@@ -4,6 +4,7 @@ import { FadeUp } from "@/components/ui/FadeUp";
 import { ScrollRevealParagraph } from "@/components/ui/ScrollReveal";
 import Image from "next/image";
 import { asset } from "@/lib/asset";
+import { PRINCIPLES } from "@/content/principles";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -12,24 +13,6 @@ const stats = [
   { k: "Projects shipped", v: "45+" },
   { k: "Based", v: "Brisbane, AU" },
   { k: "Currently", v: "Bar-Tech · Freelance" },
-];
-
-const principles = [
-  {
-    n: "01",
-    t: "Audience first",
-    b: "Every project starts with the person it's meant to win over. Design follows.",
-  },
-  {
-    n: "02",
-    t: "Edit hard",
-    b: "Restraint is the most premium signal there is. Cut until what remains is unarguable.",
-  },
-  {
-    n: "03",
-    t: "Build it once",
-    b: "Performance, accessibility and craft aren't passes — they're the floor.",
-  },
 ];
 
 export function About() {
@@ -84,14 +67,14 @@ export function About() {
             <Rule className="my-10" />
 
             <ol className="grid gap-8 md:grid-cols-3">
-              {principles.map((p, i) => (
+              {PRINCIPLES.map((p, i) => (
                 <li key={p.n}>
                   <FadeUp delay={i * 0.08}>
                     <span className="smallcaps">{p.n}</span>
                     <h3 className="mt-3 font-sans text-h5 font-medium tight-tracking">
-                      {p.t}
+                      {p.title}
                     </h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{p.b}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{p.short}</p>
                   </FadeUp>
                 </li>
               ))}
@@ -112,7 +95,7 @@ export function About() {
               </Link>
             </div>
 
-            <dl className="grid grid-cols-2 gap-y-6 md:grid-cols-4 text-sm">
+            <dl className="grid grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4 text-sm">
               {stats.map((s) => (
                 <div key={s.k}>
                   <dt className="smallcaps">{s.k}</dt>

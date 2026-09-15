@@ -18,18 +18,19 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
+  // No title/description here. Next replaces a child's openGraph object
+  // wholesale rather than merging field by field, so hardcoding them at the
+  // root meant every page that didn't declare its own openGraph shared the
+  // homepage's. Omitting them lets Next fall back to each page's own
+  // title/description instead.
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
     locale: "en_AU",
     url: SITE_URL,
-    title: "Dylan Coleman — Designer & Developer, Brisbane",
-    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dylan Coleman — Designer & Developer, Brisbane",
-    description: SITE_DESCRIPTION,
   },
   robots: {
     index: true,

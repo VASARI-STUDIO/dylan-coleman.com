@@ -56,6 +56,8 @@ Everything editorial lives in `content/`, one file per entry:
 - `content/legal.ts` — business details behind /privacy and /terms.
 
 ## Fonts
-Display is currently Fraunces (Google) as a stand-in for **PP Editorial New**. To swap:
-1. Drop `.woff2` files into `public/fonts/`
-2. Replace `Fraunces` import in `lib/fonts.ts` with `localFont` referencing those files (keep `--font-display` variable name).
+Inter for text and Instrument Serif (italic only) for accents, both via
+`next/font/google` in `lib/fonts.ts`. They are downloaded at build time and
+served from this domain, so no request reaches a font provider at runtime.
+Only the italic face of the serif is requested — its sole consumer is
+`.serif-italic` in `app/globals.css`.

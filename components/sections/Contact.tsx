@@ -87,7 +87,7 @@ export function Contact() {
                 <span className="serif-italic">growing.</span>
               </>
             }
-            intro="A short form for serious inquiries — or a direct line if you prefer. The more you tell me up front, the faster we move."
+            intro="A short form for serious enquiries — or a direct line if you prefer. The more you tell me up front, the faster we move."
           />
         </FadeUp>
 
@@ -207,8 +207,8 @@ export function Contact() {
                   )}
                   {status === "ok" && (
                     <span className="text-foreground">
-                      Sent — I&apos;ll reply from {TO_EMAIL}, usually within a
-                      business day.
+                      Sent — I&apos;ll reply from {TO_EMAIL}, within two
+                      business days.
                     </span>
                   )}
                   {status === "error" && (

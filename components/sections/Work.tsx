@@ -23,7 +23,6 @@ export function Work() {
     <section
       id="work"
       className="scroll-mt-24 border-t border-border/40"
-      style={{ scrollSnapType: "y proximity" }}
     >
       <div className="mx-auto max-w-page px-6 md:px-12 pt-24 md:pt-36 pb-12 md:pb-16">
         <FadeUp>
@@ -131,7 +130,7 @@ function WorkRow({ item, index }: { item: WorkItem; index: number }) {
   return (
     <motion.li
       ref={ref}
-      style={{ opacity, scrollSnapAlign: "center" }}
+      style={{ opacity }}
       className="relative border-t border-border/40"
     >
       <Link

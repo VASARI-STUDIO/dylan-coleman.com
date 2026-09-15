@@ -6,6 +6,7 @@ import { Rule } from "@/components/ui/Rule";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import { asset } from "@/lib/asset";
+import { PRINCIPLES } from "@/content/principles";
 
 export const metadata: Metadata = {
   title: "About",
@@ -13,24 +14,6 @@ export const metadata: Metadata = {
     "Dylan Coleman — designer and developer in Brisbane, Australia. Brand and web work for businesses that need to be taken seriously.",
   alternates: { canonical: "/about" },
 };
-
-const principles = [
-  {
-    n: "01",
-    t: "Audience first",
-    b: "Every project starts with the person it is meant to win over — what they already believe, what would make them trust you, and what would make them leave. Design follows that, not the other way around.",
-  },
-  {
-    n: "02",
-    t: "Edit hard",
-    b: "Restraint is the most premium signal there is. The work is cutting until what remains is unarguable, which is slower and less fun than adding, and it is the difference between a site that looks considered and one that looks busy.",
-  },
-  {
-    n: "03",
-    t: "Build it once",
-    b: "Performance, accessibility and craft are not a polish pass at the end. They are the floor. A site that is fast, works with a keyboard and respects reduced-motion settings is not a premium extra — it is what finished looks like.",
-  },
-];
 
 // Colophon. Every line is checkable against the repo — a designer's about
 // page that hand-waves about its own construction is the wrong signal, and
@@ -161,14 +144,14 @@ export default function AboutPage() {
             <h2 className="smallcaps">How I work</h2>
           </FadeUp>
           <ol className="mt-10 grid gap-10 md:grid-cols-3 md:gap-12">
-            {principles.map((p, i) => (
+            {PRINCIPLES.map((p, i) => (
               <li key={p.n}>
                 <FadeUp delay={0.05 + i * 0.06}>
                   <span className="smallcaps">{p.n}</span>
                   <h3 className="mt-3 font-sans text-h4 font-medium tight-tracking">
-                    {p.t}
+                    {p.title}
                   </h3>
-                  <p className="mt-3 text-body text-muted-foreground">{p.b}</p>
+                  <p className="mt-3 text-body text-muted-foreground">{p.long}</p>
                 </FadeUp>
               </li>
             ))}

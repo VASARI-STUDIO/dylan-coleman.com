@@ -16,11 +16,11 @@ export function Services() {
             label="Working Together"
             title={
               <>
-                Three ways we can grow your{" "}
-                <span className="serif-italic">brand.</span>
+                Two ways we can grow your{" "}
+                <span className="serif-italic">brand</span> — and an open door.
               </>
             }
-            intro="Engagements scoped to fit — no bloat, no rushed deliverables, no agency markup. One designer, one developer, one direct line."
+            intro="Engagements scoped to fit — no bloat, no rushed deliverables, no agency markup. One person on it, start to finish, and one direct line."
           />
         </FadeUp>
 

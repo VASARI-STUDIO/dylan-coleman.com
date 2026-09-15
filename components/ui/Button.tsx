@@ -33,44 +33,73 @@ type Props = (AsButton | AsLink) & {
   className?: string;
 };
 
+const motionProps = {
+  whileHover: { scale: 1.03 },
+  whileTap: { scale: 0.98 },
+  transition: { duration: 0.15, ease: "easeOut" },
+} as const;
+
+/**
+ * Every branch below destructures `variant`, `className` and `children` OUT of
+ * the forwarded props before spreading. They used to be read but left in place,
+ * so `{...rest}` re-applied the caller's raw `className` after the computed one
+ * and wiped every base and variant class — a Button with a className rendered
+ * completely unstyled — while `variant` leaked into the DOM as an invalid
+ * attribute. The internal-link branch had the opposite problem: it forwarded
+ * nothing, so onClick, aria-* and the rest were silently dropped.
+ */
 export function Button(props: Props) {
   const { variant = "solid", className, children } = props;
   const cls = clsx(base, variants[variant], className);
 
-  const motionProps = {
-    whileHover: { scale: 1.03 },
-    whileTap: { scale: 0.98 },
-    transition: { duration: 0.15, ease: "easeOut" },
-  } as const;
-
   if ("href" in props && props.href) {
-    const { href, external, ...rest } = props as AsLink;
+    const {
+      href,
+      external,
+      variant: _v,
+      className: _c,
+      children: _ch,
+      ...rest
+    } = props as AsLink & { variant?: Variant; className?: string };
+
     if (external) {
       return (
         <motion.a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className={cls}
           {...motionProps}
           {...rest}
+          className={cls}
         >
           {children}
         </motion.a>
       );
     }
+
     return (
       <Link href={href} className="inline-flex">
-        <motion.span className={cls} {...motionProps}>
+        <motion.span {...motionProps} {...rest} className={cls}>
           {children}
         </motion.span>
       </Link>
     );
   }
 
-  const { href: _ignored, ...buttonProps } = props as AsButton & { href?: undefined };
+  const {
+    href: _href,
+    variant: _v,
+    className: _c,
+    children: _ch,
+    ...buttonProps
+  } = props as AsButton & {
+    href?: undefined;
+    variant?: Variant;
+    className?: string;
+  };
+
   return (
-    <motion.button className={cls} {...motionProps} {...buttonProps}>
+    <motion.button {...motionProps} {...buttonProps} className={cls}>
       {children}
     </motion.button>
   );

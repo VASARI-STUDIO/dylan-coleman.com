@@ -25,7 +25,10 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen w-full overflow-hidden"
+      /* The layout offsets <main> by pt-20 (5rem) for the fixed header, so a
+         full 100vh hero ends 5rem past the fold and buries the spec strip.
+         svh rather than vh so mobile browser chrome doesn't push it further. */
+      className="relative min-h-[calc(100svh-5rem)] w-full overflow-hidden"
     >
       {/* Frame-scrub parallax background */}
       <HeroFrames triggerRef={sectionRef} />
@@ -45,7 +48,7 @@ export function Hero() {
       />
 
       {/* Hero content overlays the canvas */}
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-page flex-col items-center justify-between px-6 md:px-12 pt-28 md:pt-32 pb-10 md:pb-12 text-center">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-5rem)] max-w-page flex-col items-center justify-between px-6 md:px-12 pt-16 md:pt-20 pb-10 md:pb-12 text-center">
         <div className="flex flex-col items-center">
           {/* Identity pill */}
           <motion.div

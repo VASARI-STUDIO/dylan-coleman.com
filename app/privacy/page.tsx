@@ -68,8 +68,13 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          The one unavoidable exception is standard web-server logging by the
-          host, covered below.
+          Two exceptions, both server-side rather than in your browser. The
+          host keeps standard web-server logs, covered below. And when you
+          submit the contact form, the endpoint reads the IP address the
+          request arrives from so it can rate-limit abuse — it is held in
+          memory for sixty seconds to count recent submissions, is never
+          written to disk or attached to your enquiry, and is discarded after
+          that.
         </p>
       </PageSection>
 
@@ -80,8 +85,8 @@ export default function PrivacyPage() {
           <strong>project type, budget range and timeline</strong> you select,
           plus whatever you write in the brief. Submitting it sends me one
           email and nothing else — there is no database behind this site, and
-          nothing is stored on the server. If you would rather not use the
-          form at all, emailing me directly works just as well.
+          nothing about you is written to storage. If you would rather not use
+          the form at all, emailing me directly works just as well.
         </p>
         <p>
           I use it for one purpose: to reply to you and, if we end up working

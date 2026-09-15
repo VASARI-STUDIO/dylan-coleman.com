@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Rule } from "@/components/ui/Rule";
 import { HERO_WORK } from "@/content/work";
+
+// Without its own metadata a 404 inherits the root canonical ("/") and
+// robots: index — telling crawlers a missing page is the homepage.
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false, follow: true },
+  alternates: { canonical: undefined },
+};
 
 // Previously styled against a design system this project no longer has:
 // `text-muted` (a background token — near-black on black), plus `border-ink`,
