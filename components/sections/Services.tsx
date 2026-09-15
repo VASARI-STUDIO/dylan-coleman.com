@@ -1,4 +1,5 @@
-import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
@@ -89,7 +90,7 @@ export function Services() {
                       variant="outline"
                       className="!h-10 !px-6 text-xs uppercase tracking-[0.18em]"
                     >
-                      Inquire
+                      Enquire
                     </Button>
                   </div>
                 </li>
@@ -97,6 +98,22 @@ export function Services() {
             </FadeUp>
           ))}
         </ol>
+
+        <FadeUp delay={0.1}>
+          <div className="mt-14">
+            <Link
+              href="/services"
+              className="group inline-flex items-center gap-2 text-sm text-foreground transition-colors"
+            >
+              See how each engagement runs — process, deliverables and what
+              isn&apos;t included
+              <ArrowRight
+                className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1"
+                strokeWidth={1.5}
+              />
+            </Link>
+          </div>
+        </FadeUp>
       </div>
     </section>
   );

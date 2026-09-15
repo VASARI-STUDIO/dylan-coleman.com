@@ -3,6 +3,8 @@ import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { ScrollRevealParagraph } from "@/components/ui/ScrollReveal";
 import { asset } from "@/lib/asset";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 const stats = [
   { k: "Practicing", v: "5+ years" },
@@ -94,6 +96,19 @@ export function About() {
             </ol>
 
             <Rule className="my-10" />
+
+            <div className="mb-10">
+              <Link
+                href="/about"
+                className="group inline-flex items-center gap-2 text-sm text-foreground transition-colors"
+              >
+                More about how I work
+                <ArrowRight
+                  className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1"
+                  strokeWidth={1.5}
+                />
+              </Link>
+            </div>
 
             <dl className="grid grid-cols-2 gap-y-6 md:grid-cols-4 text-sm">
               {stats.map((s) => (

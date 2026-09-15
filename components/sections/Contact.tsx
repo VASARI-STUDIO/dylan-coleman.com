@@ -6,8 +6,15 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 
-const PROJECT_TYPES = ["Brand website", "Landing page", "Template customization", "Other"];
-const BUDGETS = ["Under $3k", "$3k – $8k", "$8k – $20k", "$20k+"];
+const PROJECT_TYPES = ["Brand website", "Landing page", "Template customisation", "Other"];
+// Quoted in Australian dollars — stated explicitly so an overseas enquiry
+// isn't reading these as USD.
+const BUDGETS = [
+  "Under $3k AUD",
+  "$3k – $8k AUD",
+  "$8k – $20k AUD",
+  "$20k+ AUD",
+];
 const TIMELINES = ["ASAP", "1 – 2 months", "2 – 4 months", "Just exploring"];
 
 const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "";
