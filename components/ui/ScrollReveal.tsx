@@ -52,17 +52,21 @@ export function ScrollRevealParagraph({
   });
 
   const words = text.split(/(\s+)/); // keep whitespace tokens
-  const wordIndices = words
-    .map((w, i) => (w.trim().length ? i : -1))
-    .filter((i) => i >= 0);
-  const total = Math.max(wordIndices.length, 1);
+  // Map token position -> word ordinal in one pass. This used to call
+  // wordIndices.indexOf(i) inside the render loop, which is O(n^2) over ~100
+  // tokens on every render of the About paragraph.
+  const wordOrdinal = new Map<number, number>();
+  words.forEach((w, i) => {
+    if (w.trim().length) wordOrdinal.set(i, wordOrdinal.size);
+  });
+  const total = Math.max(wordOrdinal.size, 1);
   const span = 1 / total;
 
   return (
     <p ref={ref} className={className}>
       {words.map((token, i) => {
         if (!token.trim()) return <span key={i}>{token}</span>;
-        const idx = wordIndices.indexOf(i);
+        const idx = wordOrdinal.get(i) ?? 0;
         const start = (idx / total) * COMPLETE_BY;
         const end = Math.min(start + span * SPREAD, 1);
         const normalized = token.toLowerCase().replace(/[^a-z]/g, "");

@@ -8,11 +8,14 @@ export const sans = Inter({
   display: "swap",
 });
 
-// Italic serif accent — Instrument Serif (matches the dark-monochrome direction)
+// Italic serif accent — Instrument Serif (matches the dark-monochrome direction).
+// Italic ONLY: the sole consumer of --font-serif is `.serif-italic` in
+// globals.css, which sets font-style: italic. Requesting "normal" as well made
+// next/font emit and preload a second face that nothing on the site renders.
 export const serif = Instrument_Serif({
   subsets: ["latin"],
   variable: "--font-serif",
   weight: ["400"],
-  style: ["normal", "italic"],
+  style: ["italic"],
   display: "swap",
 });

@@ -108,14 +108,23 @@ export function HeroFrames({
   // tear down and rebuild the ScrollTrigger and re-import GSAP.
   const redrawRef = useRef<(() => void) | null>(null);
   const exactRef = useRef(0);
-  // Bumped each time a frame lands, so the canvas can repaint with better
-  // source material as the sequence fills in.
   const [firstFrameReady, setFirstFrameReady] = useState(false);
-  const [loadedCount, setLoadedCount] = useState(0);
 
   // Load frame 0 first, reveal, then stream the rest through a small window.
   useEffect(() => {
     let cancelled = false;
+    // Repainting as frames arrive used to run through component state, so each
+    // of the ~38 loads triggered a React render for a value nothing rendered.
+    // The canvas is imperative — schedule the redraw directly and coalesce
+    // bursts into one paint per frame.
+    let redrawFrame = 0;
+    const scheduleRedraw = () => {
+      if (redrawFrame || cancelled) return;
+      redrawFrame = requestAnimationFrame(() => {
+        redrawFrame = 0;
+        redrawRef.current?.();
+      });
+    };
     imagesRef.current = new Array(FRAME_COUNT);
     loadedRef.current = new Array(FRAME_COUNT).fill(false);
 
@@ -129,7 +138,7 @@ export function HeroFrames({
         const done = () => {
           if (!cancelled) {
             loadedRef.current[i] = img.naturalWidth > 0;
-            setLoadedCount((c) => c + 1);
+            scheduleRedraw();
           }
           resolve();
         };
@@ -171,6 +180,7 @@ export function HeroFrames({
 
     return () => {
       cancelled = true;
+      if (redrawFrame) cancelAnimationFrame(redrawFrame);
     };
   }, []);
 
@@ -185,6 +195,11 @@ export function HeroFrames({
     if (!ctx) return;
 
     let lastDrawn = -1;
+    // Cached canvas box. drawAt runs on every scroll tick, and calling
+    // getBoundingClientRect there forced a synchronous layout mid-animation —
+    // the classic scroll-jank shape. The box only changes on resize, so read
+    // it there instead.
+    let box = { w: 0, h: 0 };
 
     /** Highest loaded index at or below `i`. */
     const prevLoadedAt = (i: number): number => {
@@ -205,6 +220,7 @@ export function HeroFrames({
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const rect = canvas.getBoundingClientRect();
+      box = { w: rect.width, h: rect.height };
       canvas.width = Math.max(1, Math.floor(rect.width * dpr));
       canvas.height = Math.max(1, Math.floor(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -256,10 +272,9 @@ export function HeroFrames({
       const imgA = imagesRef.current[a];
       if (!imgA) return;
 
-      const rect = canvas.getBoundingClientRect();
-      const { dW, dH, dX, dY } = coverFor(imgA, rect.width, rect.height);
+      const { dW, dH, dX, dY } = coverFor(imgA, box.w, box.h);
 
-      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.clearRect(0, 0, box.w, box.h);
       ctx.globalAlpha = 1;
       ctx.drawImage(imgA, dX, dY, dW, dH);
 
@@ -277,7 +292,18 @@ export function HeroFrames({
 
     resize();
     drawAt(lastDrawn >= 0 ? lastDrawn : 0);
-    window.addEventListener("resize", resize);
+
+    // Resize fires in bursts while a window is dragged; reallocating the
+    // backing store on each one is wasteful. Coalesce to one per frame.
+    let resizeFrame = 0;
+    const onResize = () => {
+      if (resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        resize();
+      });
+    };
+    window.addEventListener("resize", onResize, { passive: true });
 
     // Respect reduced-motion: paint a representative frame and skip the scrub
     // entirely rather than tying a large animation to the scroll wheel.
@@ -288,7 +314,8 @@ export function HeroFrames({
       redrawRef.current = () => drawAt(exactRef.current);
       return () => {
         redrawRef.current = null;
-        window.removeEventListener("resize", resize);
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        window.removeEventListener("resize", onResize);
       };
     }
 
@@ -342,17 +369,12 @@ export function HeroFrames({
     return () => {
       disposed = true;
       redrawRef.current = null;
-      window.removeEventListener("resize", resize);
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      window.removeEventListener("resize", onResize);
       st?.kill();
     };
   }, [firstFrameReady, triggerRef]);
 
-  // As frames stream in, repaint so an early scroll that landed on a fallback
-  // neighbour sharpens up to the real frame. Cheap: one canvas draw, no
-  // ScrollTrigger churn.
-  useEffect(() => {
-    redrawRef.current?.();
-  }, [loadedCount]);
 
   return (
     <canvas
