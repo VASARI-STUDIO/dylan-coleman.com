@@ -35,10 +35,15 @@ export function FadeUp({
   const Component = motion[Tag] as typeof motion.div;
   return (
     <Component
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      // `transform` strings rather than the x/y/scale shorthands: Framer's
+      // shorthands run through requestAnimationFrame on the main thread, so
+      // they drop frames while the page is still loading images. The full
+      // transform string is hardware-accelerated.
+      initial={{ opacity: 0, transform: `translateY(${y}px)` }}
+      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration, delay, ease: "easeOut" }}
+      // Strong ease-out. CSS's built-in easeOut is too weak to feel deliberate.
+      transition={{ duration, delay, ease: [0.23, 1, 0.32, 1] }}
       {...rest}
     >
       {children}

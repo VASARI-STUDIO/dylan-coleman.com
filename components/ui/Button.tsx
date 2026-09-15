@@ -18,8 +18,11 @@ const variants: Record<Variant, string> = {
     "text-foreground/80 hover:text-foreground",
 };
 
+// `press` adds the :active scale (globals.css). Specific transition
+// properties rather than `all` — transitioning everything is both slower and
+// a source of surprise when an unrelated property changes.
 const base =
-  "inline-flex h-11 items-center justify-center px-7 rounded-full font-medium text-sm tracking-tight transition-all";
+  "press inline-flex h-11 items-center justify-center px-7 rounded-full font-medium text-sm tracking-tight";
 
 type AsButton = HTMLMotionProps<"button"> & { href?: undefined };
 type AsLink = {
@@ -33,11 +36,10 @@ type Props = (AsButton | AsLink) & {
   className?: string;
 };
 
-const motionProps = {
-  whileHover: { scale: 1.03 },
-  whileTap: { scale: 0.98 },
-  transition: { duration: 0.15, ease: "easeOut" },
-} as const;
+// Hover/press used to be Framer `whileHover`/`whileTap` scale shorthands.
+// Those run on the main thread and fire on touch devices as a false hover.
+// The `.press` class does it in CSS instead: off the main thread, gated
+// behind a real pointer, and silenced under prefers-reduced-motion.
 
 /**
  * Every branch below destructures `variant`, `className` and `children` OUT of
@@ -68,7 +70,6 @@ export function Button(props: Props) {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          {...motionProps}
           {...rest}
           className={cls}
         >
@@ -79,7 +80,7 @@ export function Button(props: Props) {
 
     return (
       <Link href={href} className="inline-flex">
-        <motion.span {...motionProps} {...rest} className={cls}>
+        <motion.span {...rest} className={cls}>
           {children}
         </motion.span>
       </Link>
@@ -99,7 +100,7 @@ export function Button(props: Props) {
   };
 
   return (
-    <motion.button {...motionProps} {...buttonProps} className={cls}>
+    <motion.button {...buttonProps} className={cls}>
       {children}
     </motion.button>
   );

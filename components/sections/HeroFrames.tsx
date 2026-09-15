@@ -26,6 +26,20 @@ import { markHeroReady } from "@/lib/hero-ready";
 // smooth-scroll deceleration drags scrollY through tiny sub-frame increments.
 const FRAME_COUNT = HERO_FRAME_COUNT;
 
+/**
+ * The visually active slice of the sequence.
+ *
+ * Measured from the frames themselves: mean luminance is flat across frames
+ * 1-11 (the scene sits closed) and flat again across 61-76 (fully bloomed).
+ * Mapping scroll linearly over all 76 therefore spent about a third of the
+ * track rendering no perceptible change — which is what made a working
+ * animation feel like a broken one. Scroll now maps onto the frames that
+ * actually move; the clipped ends are visually identical to their neighbours,
+ * so nothing is lost.
+ */
+const ACTIVE_FIRST = 5;
+const ACTIVE_LAST = 68;
+
 // How many frame requests may be in flight at once after the first one. Kept
 // small so the frames don't contend with fonts, CSS and the rest of the page.
 const CONCURRENCY = 6;
@@ -107,7 +121,7 @@ export function HeroFrames({
   // being in its dependency list — otherwise every one of the ~76 loads would
   // tear down and rebuild the ScrollTrigger and re-import GSAP.
   const redrawRef = useRef<(() => void) | null>(null);
-  const exactRef = useRef(0);
+  const exactRef = useRef(ACTIVE_FIRST);
   const [firstFrameReady, setFirstFrameReady] = useState(false);
 
   // Load frame 0 first, reveal, then stream the rest through a small window.
@@ -291,7 +305,7 @@ export function HeroFrames({
     };
 
     resize();
-    drawAt(lastDrawn >= 0 ? lastDrawn : 0);
+    drawAt(lastDrawn >= 0 ? lastDrawn : ACTIVE_FIRST);
 
     // Resize fires in bursts while a window is dragged; reallocating the
     // backing store on each one is wasteful. Coalesce to one per frame.
@@ -309,7 +323,7 @@ export function HeroFrames({
     // entirely rather than tying a large animation to the scroll wheel.
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduced.matches) {
-      exactRef.current = FRAME_COUNT - 1;
+      exactRef.current = ACTIVE_LAST;
       drawAt(exactRef.current);
       redrawRef.current = () => drawAt(exactRef.current);
       return () => {
@@ -324,10 +338,7 @@ export function HeroFrames({
       drawAt(exactRef.current);
     };
 
-    // GSAP ScrollTrigger scrubs frame index from the hero's scroll progress.
-    // Range is shortened to half the hero (top top → center top) so the bloom
-    // completes well before the visitor exits the hero, leaving headroom for
-    // the fade-to-black bridge.
+    // GSAP ScrollTrigger scrubs the frame index from the track's progress.
     let st: { kill: () => void } | undefined;
     // The GSAP import is async, so this effect can be cleaned up before the
     // trigger exists. Without this flag the late-arriving trigger is never
@@ -344,11 +355,16 @@ export function HeroFrames({
 
       st = ScrollTrigger.create({
         trigger,
+        // The trigger is the tall track and the stage is pinned for its whole
+        // length, so the sequence gets every pixel of it. `bottom bottom`
+        // matches the useScroll offset the hero copy rides, which keeps the
+        // copy hand-off and the bloom on one timeline.
         start: "top top",
-        end: "center top", // ~50vh of scroll instead of the full 100vh
-        scrub: 0.3, // tighter than 0.4 — quicker catch-up, less drift
+        end: "bottom bottom",
+        scrub: 0.45, // a little softer — this is a long, slow reveal now
         onUpdate: (self) => {
-          const exact = self.progress * (FRAME_COUNT - 1);
+          const exact =
+            ACTIVE_FIRST + self.progress * (ACTIVE_LAST - ACTIVE_FIRST);
           exactRef.current = exact;
           if (Math.abs(exact - lastDrawn) > 0.005) {
             drawAt(exact);
@@ -380,7 +396,11 @@ export function HeroFrames({
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="hero-canvas pointer-events-none fixed inset-0 h-screen w-screen"
+      /* absolute, not fixed: the canvas is a layer of the sticky stage, so it
+         is clipped by the stage and leaves with it. As a fixed element it
+         outlived the hero and had to be hidden by later sections painting
+         over it. */
+      className="hero-canvas pointer-events-none absolute inset-0 h-full w-full"
       style={{
         opacity: firstFrameReady ? 1 : 0,
         transition: "opacity 800ms ease-out",

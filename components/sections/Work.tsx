@@ -121,9 +121,14 @@ function WorkRow({ item, index }: { item: WorkItem; index: number }) {
   const opacity = useTransform(focus, [0, 1], [0.72, 1]);
   const blurbOpacity = useTransform(focus, [0.55, 1], [0, 1]);
   const blurbY = useTransform(focus, [0.55, 1], [12, 0]);
-  const imageScale = useTransform(focus, [0, 1], [1.08, 1]);
+  // Built as a transform string: Framer's `scale` shorthand is not
+  // hardware-accelerated and stutters while the work imagery is still
+  // decoding, which is exactly when these rows are on screen.
+  const imageScaleValue = useTransform(focus, [0, 1], [1.08, 1]);
+  const imageScale = useTransform(imageScaleValue, (v) => `scale(${v})`);
   // Indent slightly when centered — subtle "selected" feel
-  const titleX = useTransform(focus, [0, 1], [0, 12]);
+  const titleXValue = useTransform(focus, [0, 1], [0, 12]);
+  const titleX = useTransform(titleXValue, (v) => `translateX(${v}px)`);
 
   const isLeftAlign = index % 2 === 0;
 
@@ -144,7 +149,7 @@ function WorkRow({ item, index }: { item: WorkItem; index: number }) {
         >
           {/* Type column */}
           <motion.div
-            style={{ x: titleX }}
+            style={{ transform: titleX }}
             className={`order-2 ${isLeftAlign ? "md:order-1" : "md:order-2"}`}
           >
             <div className="flex items-center gap-4">
@@ -181,7 +186,7 @@ function WorkRow({ item, index }: { item: WorkItem; index: number }) {
               // The scroll-driven scale moves to a wrapper: next/image owns its
               // own <img>, so the motion value can't be applied to it directly.
               <motion.div
-                style={{ scale: imageScale }}
+                style={{ transform: imageScale }}
                 className="absolute inset-0"
               >
                 <Image

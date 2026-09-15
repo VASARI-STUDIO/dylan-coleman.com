@@ -99,6 +99,72 @@ html.lenis body {
 }
 
 @layer components {
+  /* Hero scroll track. The sticky stage inside stays pinned for this length,
+   * which is the distance the frame sequence gets to play. Long enough that
+   * the bloom reads as an event; short enough that nobody feels trapped. */
+  .hero-track {
+    height: 180svh;
+  }
+  @media (min-width: 768px) {
+    .hero-track {
+      height: 260svh;
+    }
+  }
+  /* No pin, no scrub — an ordinary one-viewport hero. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-track {
+      height: auto;
+    }
+    .hero-track > div {
+      position: static;
+    }
+  }
+
+  /* Press feedback. Buttons should feel like the interface heard the click.
+   * Named properties, never `all` — transitioning everything is slower and
+   * surprises you when an unrelated property changes. */
+  .press {
+    transition:
+      transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+  /* Touch devices fire :hover on tap, so the lift is gated behind a real
+   * pointer. Without this a tap leaves the button visibly stuck. */
+  @media (hover: hover) and (pointer: fine) {
+    .press:hover {
+      transform: translateY(-1px);
+    }
+  }
+  .press:active {
+    transform: scale(0.97);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .press:hover,
+    .press:active {
+      transform: none;
+    }
+  }
+
+  /* Scroll cue — a slow, shallow drift. Decorative, so it goes under
+   * reduced motion entirely. */
+  .scroll-cue {
+    display: inline-block;
+    animation: scroll-cue 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes scroll-cue {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.55;
+    }
+    50% {
+      transform: translateY(6px);
+      opacity: 1;
+    }
+  }
+
   /* Keyboard-only bypass to the main landmark. Off-screen until focused, then
    * lands as a real button over the fixed header. */
   .skip-link {
