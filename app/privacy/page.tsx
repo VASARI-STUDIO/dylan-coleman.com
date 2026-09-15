@@ -78,9 +78,10 @@ export default function PrivacyPage() {
           The contact form asks for your <strong>name</strong>,{" "}
           <strong>email address</strong>, and the{" "}
           <strong>project type, budget range and timeline</strong> you select,
-          plus whatever you write in the brief. All of it is optional in the
-          sense that you can simply not use the form — emailing me directly
-          works just as well.
+          plus whatever you write in the brief. Submitting it sends me one
+          email and nothing else — there is no database behind this site, and
+          nothing is stored on the server. If you would rather not use the
+          form at all, emailing me directly works just as well.
         </p>
         <p>
           I use it for one purpose: to reply to you and, if we end up working

@@ -5,9 +5,8 @@ Personal brand site — portfolio + shop. Single-page Home + per-case-study `/wo
 ## Stack
 - Next.js 15 (App Router) + TypeScript
 - Tailwind CSS
-- MDX support wired up (case study pages are currently data-driven, not MDX)
-- next-themes for light/dark
-- Static export (`output: "export"`)
+- Resend for contact-form delivery (`app/api/contact`)
+- Dark-only palette (no theme switcher)
 
 ## Develop
 ```
@@ -19,7 +18,9 @@ npm run dev
 ```
 npm run build
 ```
-Outputs the static site to `out/`.
+Every page is statically prerendered. The one exception is
+`app/api/contact`, which runs on the server so enquiries are actually
+delivered rather than handed to the visitor's mail client.
 
 ## Deploy
 **Vercel.** Every push builds a preview deployment; `main` goes to production.
@@ -31,8 +32,17 @@ Because the site is served from the domain root, there is no `basePath`. Keep
 `NEXT_PUBLIC_BASE_PATH` unset for normal builds.
 
 ## Configuration
-- `NEXT_PUBLIC_BASE_PATH` — escape hatch for serving from a subpath. Leave unset on Vercel.
-- `NEXT_PUBLIC_FORM_ENDPOINT` — optional Formspree (or similar) endpoint for the contact form. Falls back to `mailto:` if unset.
+See `.env.example`. Set these in the Vercel project, not in the repo:
+- `RESEND_API_KEY` — contact-form delivery. Without it the form returns a
+  clear error and offers the direct email address; it never silently drops
+  an enquiry.
+- `CONTACT_TO_EMAIL` — where enquiries land. Defaults to `BUSINESS.email`.
+- `CONTACT_FROM_EMAIL` — sender, on a domain verified in Resend.
+- `NEXT_PUBLIC_BASE_PATH` — escape hatch for subpath hosting. Leave unset on Vercel.
+
+## Before going live
+`content/legal.ts` drives /privacy and /terms. `abn` and `gstRegistered`
+are `null` and render as omitted rather than invented — fill them in.
 
 ## Content
 Everything editorial lives in `content/`, one file per entry:

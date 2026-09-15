@@ -49,8 +49,8 @@ export const DATA_RECIPIENTS = [
     role: "Hosting. Serves the site and keeps standard server logs, which include IP addresses and browser user-agent strings.",
   },
   {
-    name: "Formspree Inc.",
+    name: "Resend (Plus Five Five, Inc.)",
     country: "United States",
-    role: "Delivers the contact form to my inbox. Only used when the form endpoint is configured — otherwise the form opens your own email client and nothing passes through a third party.",
+    role: "Delivers contact-form enquiries to my inbox. It processes the name, email address and message you submit solely to send that one email — it is a delivery service, not a mailing list.",
   },
 ] as const;

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
+import { BUSINESS } from "@/content/legal";
 
 const PROJECT_TYPES = ["Brand website", "Landing page", "Template customisation", "Other"];
 // Quoted in Australian dollars — stated explicitly so an overseas enquiry
@@ -17,54 +18,49 @@ const BUDGETS = [
 ];
 const TIMELINES = ["ASAP", "1 – 2 months", "2 – 4 months", "Just exploring"];
 
-const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "";
-const TO_EMAIL = "contact@dylan-coleman.com";
+const TO_EMAIL = BUSINESS.email;
 
 type Status = "idle" | "submitting" | "ok" | "error";
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
+    const payload = Object.fromEntries(data.entries());
 
-    if ((data.get("company_url") as string)?.length > 0) {
-      setStatus("ok");
-      form.reset();
-      return;
-    }
-
-    if (!FORM_ENDPOINT) {
-      const subject = `New inquiry — ${data.get("name") ?? "Anonymous"}`;
-      const body = [
-        `Name: ${data.get("name") ?? ""}`,
-        `Email: ${data.get("email") ?? ""}`,
-        `Project: ${data.get("project") ?? ""}`,
-        `Budget: ${data.get("budget") ?? ""}`,
-        `Timeline: ${data.get("timeline") ?? ""}`,
-        "",
-        `${data.get("brief") ?? ""}`,
-      ].join("\n");
-      window.location.href = `mailto:${TO_EMAIL}?subject=${encodeURIComponent(
-        subject,
-      )}&body=${encodeURIComponent(body)}`;
-      setStatus("ok");
-      return;
-    }
+    setStatus("submitting");
+    setErrorMessage(null);
 
     try {
-      setStatus("submitting");
-      const res = await fetch(FORM_ENDPOINT, {
+      // Trailing slash matters: next.config sets trailingSlash, so posting to
+      // "/api/contact" earns a 308 redirect before the handler ever runs.
+      const res = await fetch("/api/contact/", {
         method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Form submit failed");
-      setStatus("ok");
+      const result = await res.json().catch(() => ({}) as Record<string, unknown>);
+
+      if (!res.ok) {
+        // Never report success we can't back up — say what went wrong and give
+        // the visitor a route that always works.
+        setErrorMessage(
+          typeof result.error === "string"
+            ? result.error
+            : "Something went wrong sending that.",
+        );
+        setStatus("error");
+        return;
+      }
+
       form.reset();
+      setStatus("ok");
     } catch {
+      setErrorMessage("Couldn't reach the server. Check your connection.");
       setStatus("error");
     }
   }
@@ -177,14 +173,44 @@ export function Contact() {
               </label>
 
               <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between">
-                <p className="smallcaps">
-                  {status === "ok" && "Message sent — talk soon."}
-                  {status === "error" && "Something broke. Email me directly instead."}
-                  {status === "idle" && "All fields required, briefly."}
-                  {status === "submitting" && "Sending…"}
-                </p>
-                <Button type="submit" variant="solid">
-                  {status === "submitting" ? "Sending…" : "Send inquiry"}
+                {/* aria-live so the outcome is announced, not just shown. */}
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="max-w-prose text-sm"
+                >
+                  {status === "idle" && (
+                    <span className="smallcaps">All fields required, briefly.</span>
+                  )}
+                  {status === "submitting" && (
+                    <span className="smallcaps">Sending…</span>
+                  )}
+                  {status === "ok" && (
+                    <span className="text-foreground">
+                      Sent — I&apos;ll reply from {TO_EMAIL}, usually within a
+                      business day.
+                    </span>
+                  )}
+                  {status === "error" && (
+                    <span className="text-foreground">
+                      {errorMessage}{" "}
+                      <a
+                        href={`mailto:${TO_EMAIL}`}
+                        className="underline underline-offset-4"
+                      >
+                        Email me directly at {TO_EMAIL}
+                      </a>
+                      .
+                    </span>
+                  )}
+                </div>
+                <Button
+                  type="submit"
+                  variant="solid"
+                  disabled={status === "submitting"}
+                  className="disabled:opacity-60"
+                >
+                  {status === "submitting" ? "Sending…" : "Send enquiry"}
                 </Button>
               </div>
             </form>
