@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, STATIC_ROUTES, workRoutes, absolute } from "@/lib/site";
+import { STATIC_ROUTES, workRoutes, absolute } from "@/lib/site";
 
 // Emitted as /sitemap.xml at build time. Routes are derived from the same
 // sources the navigation uses, so adding a case study updates the sitemap
@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: r.priority,
     })),
     ...workRoutes().map((path) => ({
-      url: `${SITE_URL}${path}`,
+      url: absolute(path),
       lastModified,
       changeFrequency: "yearly" as const,
       priority: 0.7,

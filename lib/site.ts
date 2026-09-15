@@ -22,5 +22,15 @@ export function workRoutes() {
   return HERO_WORK.filter((w) => w.slug).map((w) => `/work/${w.slug}`);
 }
 
-export const absolute = (path: string) =>
-  `${SITE_URL}${path === "/" ? "" : path}`;
+/**
+ * Absolute URL for a route, WITH a trailing slash.
+ *
+ * next.config sets trailingSlash: true, so "/services" 308-redirects to
+ * "/services/" and the canonical tag emits the slashed form. A sitemap listing
+ * the unslashed URLs points every crawler at a redirect and disagrees with the
+ * canonical on every page — so the slash is not cosmetic here.
+ */
+export const absolute = (path: string) => {
+  const withSlash = path.endsWith("/") ? path : `${path}/`;
+  return `${SITE_URL}${withSlash}`;
+};

@@ -1,4 +1,4 @@
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, absolute } from "@/lib/site";
 import { BUSINESS } from "@/content/legal";
 import { SOCIALS } from "@/content/social";
 
@@ -10,6 +10,9 @@ import { SOCIALS } from "@/content/social";
  * mirrors the budget bands the contact form actually offers.
  */
 export function StructuredData() {
+  // Same trailing-slash form the canonicals use, so the entity URLs and the
+  // pages they describe are literally the same string.
+  const home = absolute("/");
   const personId = `${SITE_URL}/#person`;
   const businessId = `${SITE_URL}/#practice`;
 
@@ -18,7 +21,7 @@ export function StructuredData() {
       "@type": "Person",
       "@id": personId,
       name: SITE_NAME,
-      url: SITE_URL,
+      url: home,
       jobTitle: "Designer & Developer",
       email: `mailto:${BUSINESS.email}`,
       address: {
@@ -42,7 +45,7 @@ export function StructuredData() {
       "@id": businessId,
       name: BUSINESS.tradingName,
       description: SITE_DESCRIPTION,
-      url: SITE_URL,
+      url: home,
       image: `${SITE_URL}/opengraph-image.png`,
       founder: { "@id": personId },
       address: {
@@ -60,7 +63,7 @@ export function StructuredData() {
     {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
-      url: SITE_URL,
+      url: home,
       name: SITE_NAME,
       description: SITE_DESCRIPTION,
       publisher: { "@id": personId },
