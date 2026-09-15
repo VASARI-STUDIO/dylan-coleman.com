@@ -31,6 +31,33 @@ const principles = [
   },
 ];
 
+// Colophon. Every line is checkable against the repo — a designer's about
+// page that hand-waves about its own construction is the wrong signal, and
+// crediting the generated hero footage is the same disclosure the Spark
+// Electrical case study already makes about its imagery.
+const colophon = [
+  {
+    k: "Built with",
+    v: "Next.js and TypeScript, styled with Tailwind, deployed on Vercel.",
+  },
+  {
+    k: "Type",
+    v: "Inter for text, Instrument Serif for the italic accents. Both self-hosted at build time, so loading a page doesn't tell a font provider you visited.",
+  },
+  {
+    k: "Hero sequence",
+    v: "A 76-frame scroll-scrubbed canvas. The footage was generated with Kling AI, then re-encoded and sequenced for the web.",
+  },
+  {
+    k: "Project imagery",
+    v: "Photography and renders are my own unless a case study says otherwise — demonstration projects credit generated imagery in their details.",
+  },
+  {
+    k: "Tracking",
+    v: "None. No analytics, no cookies, no pixels. See the privacy page.",
+  },
+];
+
 const working = [
   {
     k: "Based",
@@ -164,6 +191,26 @@ export default function AboutPage() {
                 </dd>
                 <dd className="mt-2 text-body-sm text-muted-foreground">
                   {w.note}
+                </dd>
+              </FadeUp>
+            ))}
+          </dl>
+
+          <Rule className="my-12 md:my-16" />
+
+          <FadeUp>
+            <h2 className="smallcaps">Colophon</h2>
+          </FadeUp>
+          <dl className="mt-8 grid gap-x-12 gap-y-6 md:grid-cols-12">
+            {colophon.map((c, i) => (
+              <FadeUp
+                key={c.k}
+                delay={0.04 + i * 0.04}
+                className="md:col-span-12 md:grid md:grid-cols-12 md:gap-12"
+              >
+                <dt className="smallcaps md:col-span-3">{c.k}</dt>
+                <dd className="mt-1 max-w-prose text-body-sm text-muted-foreground md:col-span-9 md:mt-0">
+                  {c.v}
                 </dd>
               </FadeUp>
             ))}

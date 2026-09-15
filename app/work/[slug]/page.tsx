@@ -16,6 +16,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const item = getWorkBySlug(slug);
   if (!item) return {};
+  // Each case study shares its own hero rather than the generic site card —
+  // the imagery is the strongest thing these pages have, and a link to a
+  // specific project should look like that project.
+  const image = item.hero ?? item.cover;
+  const images = image
+    ? [{ url: image, alt: `${item.title} — ${item.client}` }]
+    : undefined;
+
   return {
     title: item.title,
     description: item.summary,
@@ -25,6 +33,13 @@ export async function generateMetadata({
       description: item.summary,
       type: "article",
       url: `/work/${slug}`,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.title} — ${item.client}`,
+      description: item.summary,
+      images,
     },
   };
 }

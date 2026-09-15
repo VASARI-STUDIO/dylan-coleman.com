@@ -194,6 +194,12 @@ export function CaseStudyShell({
                 </dd>
               </div>
             )}
+            {meta.duration && (
+              <div>
+                <dt className="smallcaps">Duration</dt>
+                <dd className="mt-2 text-foreground">{meta.duration}</dd>
+              </div>
+            )}
             {meta.photography && (
               <div>
                 <dt className="smallcaps">Photography</dt>
