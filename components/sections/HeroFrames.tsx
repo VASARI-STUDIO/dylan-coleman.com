@@ -37,8 +37,21 @@ const FRAME_COUNT = HERO_FRAME_COUNT;
  * actually move; the clipped ends are visually identical to their neighbours,
  * so nothing is lost.
  */
-const ACTIVE_FIRST = 5;
-const ACTIVE_LAST = 68;
+/**
+ * The slice of the sequence worth scrubbing, as 0-based indices.
+ *
+ * The generated clip opens and closes on held frames. Measured across all 76:
+ * average island luminance is flat at ~21.3 from frame 1 to frame 16, climbs
+ * steadily to 36.2 by frame 63, then holds to the end. Mapping scroll onto the
+ * full range therefore spent the first fifth of the track and the last fifth
+ * showing no visible change — the "nothing happens when I start scrolling"
+ * dead zone.
+ *
+ * These bounds start the scrub where the bloom actually begins and end it where
+ * it peaks, so the very first pixel of scroll moves the image.
+ */
+const ACTIVE_FIRST = 21;
+const ACTIVE_LAST = 62;
 
 /**
  * Fraction of each source frame to crop off the bottom before drawing.
@@ -106,9 +119,6 @@ function subdivisionOrder(n: number): number[] {
 function frameStride(): number {
   if (typeof window === "undefined") return 1;
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return FRAME_COUNT; // ends only — the scrub is disabled anyway
-  }
 
   const conn = (
     navigator as Navigator & {
@@ -129,6 +139,26 @@ function framesForStride(stride: number): number[] {
   const set = new Set<number>([0, FRAME_COUNT - 1]);
   for (let i = 0; i < FRAME_COUNT; i += stride) set.add(i);
   return [...set].sort((a, b) => a - b);
+}
+
+/**
+ * Which frames this visitor downloads.
+ *
+ * Under reduced motion there is no scrub, so the only frame that is ever drawn
+ * is the still at ACTIVE_LAST — fetch that one and nothing else. This used to
+ * fall through to a stride of FRAME_COUNT, which fetched the first and last
+ * frames and then painted an 83% blend of the two. It looked close enough to
+ * the intended still to pass, but it was two downloads to approximate a frame
+ * neither of them was.
+ */
+function framesToLoad(): number[] {
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return [ACTIVE_LAST];
+  }
+  return framesForStride(frameStride());
 }
 
 export function HeroFrames({
@@ -185,7 +215,7 @@ export function HeroFrames({
       });
 
     (async () => {
-      const wanted = new Set(framesForStride(frameStride()));
+      const wanted = new Set(framesToLoad());
       const order = subdivisionOrder(FRAME_COUNT).filter((i) => wanted.has(i));
       if (!order.length) {
         setFirstFrameReady(true);
@@ -400,13 +430,20 @@ export function HeroFrames({
 
       st = ScrollTrigger.create({
         trigger,
-        // The trigger is the tall track and the stage is pinned for its whole
-        // length, so the sequence gets every pixel of it. `bottom bottom`
-        // matches the useScroll offset the hero copy rides, which keeps the
-        // copy hand-off and the bloom on one timeline.
+        // The hero is one viewport and is not pinned, so the sequence scrubs
+        // while the hero scrolls away. `bottom 40%` ends the scrub once the
+        // hero's bottom edge has risen to 40% down the viewport — about 60% of
+        // the way through its exit. That is deliberate: ending at `bottom top`
+        // would put peak bloom exactly at the moment the hero finishes leaving
+        // the screen, so the payoff would play to nobody. This way the light
+        // reaches full while the island is still in frame, and the remaining
+        // scroll is a fully-bloomed hero sliding off.
         start: "top top",
-        end: "bottom bottom",
-        scrub: 0.45, // a little softer — this is a long, slow reveal now
+        end: "bottom 40%",
+        // Low scrub: enough to smooth wheel jitter, not enough to read as
+        // lag. At 0.45 the image visibly trailed the scrollbar, which felt
+        // like the animation starting late.
+        scrub: 0.15,
         onUpdate: (self) => {
           const exact =
             ACTIVE_FIRST + self.progress * (ACTIVE_LAST - ACTIVE_FIRST);

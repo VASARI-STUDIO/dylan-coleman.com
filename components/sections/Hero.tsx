@@ -13,23 +13,23 @@ import { SOCIALS } from "@/content/social";
 import { HERO_FACTS } from "@/content/claims";
 
 /**
- * Hero as a pinned stage.
+ * Hero as a single screen the sequence scrubs across.
  *
- * Previously the hero was a single viewport and the frame sequence played as a
- * parallax background while the page scrolled past. That meant the bloom — the
- * whole point of the sequence — peaked after the headline had already left the
- * screen, and the next section's opaque background slid over the canvas
- * mid-animation. The animation ran; nobody got to watch it.
+ * This was briefly a tall scroll track with a `sticky` stage pinned inside it,
+ * so the hero held still while the sequence played through. That bought a
+ * fully-visible bloom at the cost of the thing people actually notice first:
+ * the hero did not move when you scrolled. Roughly 470px of wheel produced no
+ * visible change, which reads as a broken page, not as a held shot.
  *
- * Now the section is a tall scroll track with a `sticky` stage inside it. The
- * hero holds still while the sequence plays through, then releases naturally
- * when the track ends. This is CSS sticky, not a GSAP pin and not a scroll
- * hijack: the scrollbar keeps moving at its normal rate the whole time, so the
- * page never fights the user's input or traps their scroll.
+ * So the hero is one viewport again and the sequence scrubs across its own
+ * exit. The first pixel of scroll moves both the page and the image. To keep
+ * the bloom from peaking off-screen — the flaw that motivated the pin — the
+ * scrub finishes before the hero has finished leaving (see HeroFrames), so the
+ * light reaches full while the island is still in frame and the last stretch
+ * is simply a bloomed hero sliding away.
  *
- * The copy rides the same scroll progress. It sits at full strength while the
- * bloom builds, then lifts and fades as the light peaks — so the visitor's
- * attention is handed from the words to the image rather than competing.
+ * The copy rides the same scroll progress, dimming as it goes so the words
+ * hand off to the image instead of competing with the brightest frames.
  */
 
 /** Entrance stagger, 60ms apart — long enough to read as a cascade. */
@@ -48,19 +48,21 @@ export function Hero() {
   const trackRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
 
-  // 0 at the top of the track, 1 when its bottom meets the viewport bottom —
-  // exactly the span the sticky stage is pinned for.
+  // 0 with the hero filling the screen, 1 once it has fully scrolled off the
+  // top — one viewport of travel, matching the ScrollTrigger in HeroFrames.
   const { scrollYProgress } = useScroll({
     target: trackRef,
-    offset: ["start start", "end end"],
+    offset: ["start start", "end start"],
   });
 
-  // Copy holds, then hands over to the image. Nothing moves until 55% through.
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.55, 0.9], [1, 1, 0]);
+  // Copy holds at full strength while the bloom builds, then dims as it leaves.
+  // The lift is slight: the section is already moving with the page, so a large
+  // offset on top of that reads as the text detaching rather than as parallax.
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.5, 0.92], [1, 1, 0]);
   const copyLift = useTransform(
     scrollYProgress,
-    [0, 0.55, 0.9],
-    ["0px", "0px", "-56px"],
+    [0, 0.5, 0.92],
+    ["0px", "0px", "-32px"],
   );
   const copyTransform = useTransform(copyLift, (v) => `translateY(${v})`);
 
@@ -68,9 +70,8 @@ export function Hero() {
   const cueOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
 
   return (
-    /* .hero-track sets the scroll length (globals.css) — 180svh on phones,
-       260svh from md up, and `auto` under prefers-reduced-motion so the stage
-       collapses back to a single ordinary viewport.
+    /* .hero-track is exactly 100svh (globals.css) — the hero fills the screen
+       and nothing more.
 
        `-mt-20` cancels the `pt-20` that <main> uses to clear the fixed header.
        Without it the stage started 80px down the page while still being
@@ -82,8 +83,9 @@ export function Hero() {
        like. The hero is meant to be full-bleed under the transparent header
        anyway; the copy clears it with its own pt-24/pt-28. */
     <section ref={trackRef} className="hero-track relative -mt-20 w-full">
-      {/* The pinned stage. Everything the visitor sees lives in here. */}
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
+      {/* The stage. `relative` is load-bearing: the canvas and the two scrims
+          below are positioned against it. */}
+      <div className="relative h-[100svh] w-full overflow-hidden">
         {/* Frame-scrub background, scrubbed across the whole track */}
         <HeroFrames triggerRef={trackRef} />
 

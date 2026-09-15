@@ -102,22 +102,18 @@ html.lenis body {
   /* Hero scroll track. The sticky stage inside stays pinned for this length,
    * which is the distance the frame sequence gets to play. Long enough that
    * the bloom reads as an event; short enough that nobody feels trapped. */
+  /* One screen, exactly.
+   *
+   * This used to be a 180svh/260svh scroll track with a `sticky` stage pinned
+   * inside it, so the sequence played while the page was held still. The cost
+   * was dead scroll at the top: you pushed the wheel and the hero did not
+   * move, because the first ~470px only advanced frames that barely changed.
+   * The pin is gone — the hero is one viewport and the sequence scrubs across
+   * its own exit, so the first pixel of scroll moves both the page and the
+   * image. No reduced-motion geometry override is needed any more: the stage
+   * is a plain block at every setting, and the scrub itself is disabled in JS. */
   .hero-track {
-    height: 180svh;
-  }
-  @media (min-width: 768px) {
-    .hero-track {
-      height: 260svh;
-    }
-  }
-  /* No pin, no scrub — an ordinary one-viewport hero. */
-  @media (prefers-reduced-motion: reduce) {
-    .hero-track {
-      height: auto;
-    }
-    .hero-track > div {
-      position: static;
-    }
+    height: 100svh;
   }
 
   /* Press feedback. Buttons should feel like the interface heard the click.
