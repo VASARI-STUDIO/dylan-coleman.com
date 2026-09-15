@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Rule } from "@/components/ui/Rule";
 import { IndustryTag } from "@/components/ui/IndustryTag";
@@ -30,11 +31,16 @@ function ImageSlot({
         }`}
       >
         {img.src ? (
-          <img
+          <Image
             src={asset(img.src)}
             alt={img.alt}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
+            fill
+            sizes={
+              rounded
+                ? "(min-width: 768px) 46vw, 100vw"
+                : "100vw"
+            }
+            className="object-cover"
           />
         ) : (
           <div className="grid h-full place-items-center text-muted-foreground">
@@ -105,10 +111,13 @@ export function CaseStudyShell({
         <FadeUp>
           <div className="relative aspect-[21/10] w-full bg-card overflow-hidden">
             {meta.hero ? (
-              <img
+              <Image
                 src={asset(meta.hero)}
                 alt={meta.title}
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
               />
             ) : (
               <div className="grid h-full place-items-center text-muted-foreground">

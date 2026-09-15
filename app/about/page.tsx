@@ -4,6 +4,7 @@ import { PageShell } from "@/components/layout/PageShell";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { Rule } from "@/components/ui/Rule";
 import { Button } from "@/components/ui/Button";
+import Image from "next/image";
 import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
@@ -99,11 +100,12 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-page gap-12 px-6 md:grid-cols-12 md:px-12 py-16 md:py-24">
           <FadeUp className="md:col-span-5">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-card">
-              <img
+              <Image
                 src={asset("/about/portrait.webp")}
                 alt="Dylan Coleman"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                sizes="(min-width: 768px) 40vw, 100vw"
+                className="object-cover"
               />
             </div>
           </FadeUp>

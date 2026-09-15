@@ -2,6 +2,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rule } from "@/components/ui/Rule";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { ScrollRevealParagraph } from "@/components/ui/ScrollReveal";
+import Image from "next/image";
 import { asset } from "@/lib/asset";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -51,11 +52,12 @@ export function About() {
         <div className="mt-16 grid gap-12 md:grid-cols-12">
           <FadeUp className="md:col-span-5" delay={0.1}>
             <div className="relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl bg-card">
-              <img
+              <Image
                 src={asset("/about/portrait.webp")}
                 alt="Dylan Coleman"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
+                fill
+                sizes="(min-width: 768px) 28rem, 100vw"
+                className="object-cover"
               />
             </div>
           </FadeUp>

@@ -53,7 +53,14 @@ const nextConfig = {
   trailingSlash: true,
   basePath,
   assetPrefix: basePath || undefined,
-  images: { unoptimized: true },
+  // `unoptimized` was a static-export constraint and the export is gone. The
+  // source assets are up to 2400px and render into slots a fraction of that,
+  // so letting Next resize and re-encode per breakpoint is the single biggest
+  // remaining win for anyone on a phone.
+  images: {
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [390, 640, 828, 1080, 1200, 1600, 1920, 2400],
+  },
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },

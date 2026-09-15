@@ -8,6 +8,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { IndustryTag } from "@/components/ui/IndustryTag";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { HERO_WORK, RECENT_WORK, type WorkItem } from "@/content/work";
+import Image from "next/image";
 import { asset } from "@/lib/asset";
 
 // Full-width scroll-list of projects. Each row spans 90vh, holds the visitor's
@@ -65,11 +66,12 @@ export function Work() {
                 <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-card">
                   <div className="relative aspect-[16/10] w-full overflow-hidden bg-secondary/40">
                     {item.cover && (
-                      <img
+                      <Image
                         src={asset(item.cover)}
                         alt={item.title}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover"
+                        fill
+                        sizes="(min-width: 768px) 46vw, 100vw"
+                        className="object-cover"
                       />
                     )}
                   </div>
@@ -177,13 +179,21 @@ function WorkRow({ item, index }: { item: WorkItem; index: number }) {
             }`}
           >
             {item.cover && (
-              <motion.img
-                src={asset(item.cover)}
-                alt={item.title}
+              // The scroll-driven scale moves to a wrapper: next/image owns its
+              // own <img>, so the motion value can't be applied to it directly.
+              <motion.div
                 style={{ scale: imageScale }}
-                loading={index < 1 ? "eager" : "lazy"}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+                className="absolute inset-0"
+              >
+                <Image
+                  src={asset(item.cover)}
+                  alt={item.title}
+                  fill
+                  priority={index === 0}
+                  sizes="(min-width: 768px) 58vw, 100vw"
+                  className="object-cover"
+                />
+              </motion.div>
             )}
           </div>
         </div>
