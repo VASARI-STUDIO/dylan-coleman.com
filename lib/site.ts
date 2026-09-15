@@ -8,13 +8,22 @@ export const SITE_NAME = "Dylan Coleman";
 export const SITE_DESCRIPTION =
   "Brand identities and websites for businesses that need to be taken seriously. Designer and developer based in Brisbane, Australia.";
 
-/** Every static route, for the sitemap and for cross-checking navigation. */
+/**
+ * Every static route.
+ *
+ * `dated: true` means the route has a real, tracked last-changed date that the
+ * sitemap can state honestly. The rest carry no lastmod at all — it is the one
+ * sitemap field search engines actually consume, and stamping every URL with
+ * the build timestamp tells them /terms changed on a deploy that only touched
+ * a Tailwind class. Once that signal is shown to be unreliable it gets ignored
+ * entirely, including on the day something really does change.
+ */
 export const STATIC_ROUTES = [
-  { path: "/", priority: 1.0 },
-  { path: "/services", priority: 0.9 },
-  { path: "/about", priority: 0.8 },
-  { path: "/privacy", priority: 0.3 },
-  { path: "/terms", priority: 0.3 },
+  { path: "/", priority: 1.0, dated: false },
+  { path: "/services", priority: 0.9, dated: false },
+  { path: "/about", priority: 0.8, dated: false },
+  { path: "/privacy", priority: 0.3, dated: true },
+  { path: "/terms", priority: 0.3, dated: true },
 ] as const;
 
 /** Case-study routes, derived from the work collection so they can't drift. */

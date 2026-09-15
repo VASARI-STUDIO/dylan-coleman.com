@@ -16,13 +16,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const item = getWorkBySlug(slug);
   if (!item) return {};
-  // Each case study shares its own hero rather than the generic site card —
-  // the imagery is the strongest thing these pages have, and a link to a
-  // specific project should look like that project.
-  const image = item.hero ?? item.cover;
-  const images = image
-    ? [{ url: image, alt: `${item.title} — ${item.client}` }]
-    : undefined;
+  // Each case study shares its own card rather than the generic site one — the
+  // imagery is the strongest thing these pages have. These are pre-rendered
+  // 1200x630 PNGs (scripts note in public/og), not the raw hero: crawlers want
+  // declared dimensions and a format they all decode, and a raw WebP of unknown
+  // size gets skipped by some and letterboxed by others.
+  const images = [
+    {
+      url: `/og/${slug}.png`,
+      width: 1200,
+      height: 630,
+      type: "image/png",
+      alt: `${item.title} — ${item.client}`,
+    },
+  ];
 
   return {
     title: item.title,

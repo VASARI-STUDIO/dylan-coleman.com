@@ -91,12 +91,19 @@ export function Contact() {
           />
         </FadeUp>
 
-        <div className="mt-16 grid gap-16 md:grid-cols-12">
+        {/* gap-16 across 12 columns needs 11 x 64 = 704px of gutters, but the
+            container's content box at the md breakpoint (768px) is only 672px.
+            Every track collapsed to 0 and the grid overflowed its padding.
+            Narrower gutters until there is room for the wide ones. */}
+        <div className="mt-16 grid gap-12 md:grid-cols-12 lg:gap-16">
           <FadeUp className="md:col-span-4" delay={0.1}>
             <p className="smallcaps">Direct</p>
             <a
               href={`mailto:${TO_EMAIL}`}
-              className="mt-3 block font-sans text-h4 font-medium tight-tracking underline underline-offset-[6px] decoration-border hover:decoration-foreground transition-colors"
+              /* The address is 25 unbreakable-ish characters in a ~244px track
+                 at md. Step the size with the available width so it never has
+                 to hyphenate itself across three lines. */
+              className="mt-3 block break-words font-sans text-body-lg font-medium tight-tracking underline underline-offset-[6px] decoration-border hover:decoration-foreground transition-colors lg:text-h4"
             >
               {TO_EMAIL}
             </a>
