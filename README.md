@@ -1,6 +1,7 @@
 # dylan-coleman.com
 
-Personal brand site — portfolio + shop. Single-page Home + per-case-study `/work/[slug]` pages.
+Personal brand site. Single-page Home, deeper `/services` and `/about`
+pages, per-case-study `/work/[slug]` pages, and `/privacy` + `/terms`.
 
 ## Stack
 - Next.js 15 (App Router) + TypeScript
@@ -50,8 +51,9 @@ Everything editorial lives in `content/`, one file per entry:
   add it to `HERO_WORK` (full `/work/[slug]` page) or `RECENT_WORK` (home card
   only). `index` fields are the displayed `W/nn` numbers, so renumber the
   collection if you insert or remove an entry.
-- `content/shop/` — products, same pattern via `SHOP`.
-- `content/services.ts`, `content/social.ts` — services and off-site links.
+- `content/services.ts` — the packaged offerings, and the process detail /services renders.
+- `content/social.ts` — off-site links, shared by nav, hero and footer.
+- `content/legal.ts` — business details behind /privacy and /terms.
 
 ## Fonts
 Display is currently Fraunces (Google) as a stand-in for **PP Editorial New**. To swap:
