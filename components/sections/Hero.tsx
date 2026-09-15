@@ -70,8 +70,18 @@ export function Hero() {
   return (
     /* .hero-track sets the scroll length (globals.css) — 180svh on phones,
        260svh from md up, and `auto` under prefers-reduced-motion so the stage
-       collapses back to a single ordinary viewport. */
-    <section ref={trackRef} className="hero-track relative w-full">
+       collapses back to a single ordinary viewport.
+
+       `-mt-20` cancels the `pt-20` that <main> uses to clear the fixed header.
+       Without it the stage started 80px down the page while still being
+       100svh tall, so it overhung the viewport by exactly that much and the
+       spec strip along its bottom edge was sliced in half. With `sticky` that
+       only showed on first paint — scrolling 80px pinned the stage and hid the
+       mistake. Under prefers-reduced-motion the stage is `static`, so there is
+       no pin to rescue it and the clipped strip is simply what the hero looks
+       like. The hero is meant to be full-bleed under the transparent header
+       anyway; the copy clears it with its own pt-24/pt-28. */
+    <section ref={trackRef} className="hero-track relative -mt-20 w-full">
       {/* The pinned stage. Everything the visitor sees lives in here. */}
       <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
         {/* Frame-scrub background, scrubbed across the whole track */}

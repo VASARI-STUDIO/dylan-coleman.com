@@ -40,6 +40,28 @@ const FRAME_COUNT = HERO_FRAME_COUNT;
 const ACTIVE_FIRST = 5;
 const ACTIVE_LAST = 68;
 
+/**
+ * Fraction of each source frame to crop off the bottom before drawing.
+ *
+ * The generator burned a "KlingAI 3.0" watermark into the bottom-right of
+ * every frame. Measured across frames 30-76 it sits at y 0.936-0.968 and
+ * never moves, so discarding the bottom 7% removes it outright with ~0.6%
+ * to spare. Doing it here rather than re-encoding 78 WebPs keeps the assets
+ * untouched and means the crop applies on every viewport and in every motion
+ * mode — the bottom scrim used to be the only thing covering it, which held
+ * up on a scrubbing desktop hero and nowhere else. Under reduced motion we
+ * paint the bloom frame at rest, which is exactly when the watermark is
+ * brightest and the scrim is weakest.
+ *
+ * What is lost is open water below the reflection; the composition does not
+ * depend on it.
+ */
+const WATERMARK_CROP = 0.07;
+
+/** Height of the usable (watermark-free) region of a source frame. */
+const usableHeight = (img: HTMLImageElement) =>
+  img.naturalHeight * (1 - WATERMARK_CROP);
+
 // How many frame requests may be in flight at once after the first one. Kept
 // small so the frames don't contend with fonts, CSS and the rest of the page.
 const CONCURRENCY = 6;
@@ -258,7 +280,9 @@ export function HeroFrames({
      * redraw silently painted at zero size onto a blank canvas.
      */
     const coverFor = (img: HTMLImageElement, boxW: number, boxH: number) => {
-      const imgAR = img.naturalWidth / img.naturalHeight;
+      // Aspect ratio of the cropped region, so object-cover geometry is
+      // computed against what actually gets drawn.
+      const imgAR = img.naturalWidth / usableHeight(img);
       const boxAR = boxW / boxH;
       if (!Number.isFinite(imgAR) || imgAR <= 0) {
         return { dW: boxW, dH: boxH, dX: 0, dY: 0 };
@@ -290,7 +314,18 @@ export function HeroFrames({
 
       ctx.clearRect(0, 0, box.w, box.h);
       ctx.globalAlpha = 1;
-      ctx.drawImage(imgA, dX, dY, dW, dH);
+      // 9-arg form: source rect excludes the watermarked bottom strip.
+      ctx.drawImage(
+        imgA,
+        0,
+        0,
+        imgA.naturalWidth,
+        usableHeight(imgA),
+        dX,
+        dY,
+        dW,
+        dH,
+      );
 
       const b = nextLoadedAt(a + 1);
       if (b > a) {
@@ -298,7 +333,17 @@ export function HeroFrames({
         const t = (clamped - a) / (b - a);
         if (imgB && t > 0.005) {
           ctx.globalAlpha = Math.min(1, t);
-          ctx.drawImage(imgB, dX, dY, dW, dH);
+          ctx.drawImage(
+            imgB,
+            0,
+            0,
+            imgB.naturalWidth,
+            usableHeight(imgB),
+            dX,
+            dY,
+            dW,
+            dH,
+          );
           ctx.globalAlpha = 1;
         }
       }
