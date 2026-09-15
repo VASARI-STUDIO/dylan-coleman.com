@@ -118,7 +118,9 @@ export function Contact() {
             <form
               onSubmit={handleSubmit}
               className="liquid-glass grid gap-7 rounded-2xl p-8 md:p-10"
-              aria-label="Project inquiry form"
+              aria-label="Project enquiry form"
+              aria-describedby="contact-status"
+              noValidate={false}
             >
               <input
                 type="text"
@@ -175,9 +177,24 @@ export function Contact() {
                 />
               </label>
 
-              <div className="flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between">
-                {/* aria-live so the outcome is announced, not just shown. */}
+              {/* Was flex-col-reverse, which put the error text (and its mailto
+                  escape hatch) before the submit button in the tab order on
+                  mobile while showing it after. Normal order on both axes now. */}
+              <div className="flex flex-col gap-4 md:flex-row-reverse md:items-center md:justify-between">
+                <Button
+                  type="submit"
+                  variant="solid"
+                  aria-busy={status === "submitting"}
+                  className="shrink-0"
+                >
+                  {status === "submitting" ? "Sending…" : "Send enquiry"}
+                </Button>
+                {/* aria-live so the outcome is announced, not just shown.
+                    id is referenced by the form's aria-describedby, so an error
+                    is tied to the control that produced it rather than floating
+                    unattached beside it. */}
                 <div
+                  id="contact-status"
                   role="status"
                   aria-live="polite"
                   className="max-w-prose text-sm"
@@ -207,14 +224,6 @@ export function Contact() {
                     </span>
                   )}
                 </div>
-                <Button
-                  type="submit"
-                  variant="solid"
-                  disabled={status === "submitting"}
-                  className="disabled:opacity-60"
-                >
-                  {status === "submitting" ? "Sending…" : "Send enquiry"}
-                </Button>
               </div>
             </form>
           </FadeUp>

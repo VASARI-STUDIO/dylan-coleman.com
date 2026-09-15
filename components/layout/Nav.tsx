@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Mail, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
@@ -22,6 +22,24 @@ export function Nav() {
   // which left the wordmark and links at the mercy of whatever scrolled
   // underneath. Once the page has moved at all, lay down a scrim.
   const [scrolled, setScrolled] = useState(false);
+
+  // Focus returns here when the menu closes, so a keyboard user is not dumped
+  // back at the top of the document.
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the menu. Without this the only way out for a keyboard user
+  // was to tab all the way through it and back to the toggle.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -97,12 +115,14 @@ export function Nav() {
 
         {/* Mobile menu toggle */}
         <button
+          ref={toggleRef}
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((v) => !v)}
-          className="liquid-glass grid h-9 w-9 place-items-center rounded-full text-foreground/90 transition-colors hover:text-foreground md:hidden"
+          /* 44px minimum touch target — was 36px. */
+          className="liquid-glass grid h-11 w-11 place-items-center rounded-full text-foreground/90 transition-colors hover:text-foreground md:hidden"
         >
           {open ? (
             <X className="h-4 w-4" strokeWidth={1.5} />

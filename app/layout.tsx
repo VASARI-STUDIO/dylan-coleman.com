@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { ScrollReset } from "@/components/ScrollReset";
 import { Preloader } from "@/components/Preloader";
 import { StructuredData } from "@/components/StructuredData";
+import { MotionProvider } from "@/components/MotionProvider";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 import "./globals.css";
 
@@ -59,14 +60,17 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <Preloader />
-        <SmoothScroll />
-        <ScrollReset />
-        <Nav />
-        <main id="main" className="pt-20">
-          {children}
-        </main>
-        <Footer />
+        <MotionProvider>
+          <Preloader />
+          <SmoothScroll />
+          <ScrollReset />
+          <Nav />
+          {/* tabIndex=-1 so the skip link reliably moves focus, not just scroll. */}
+          <main id="main" tabIndex={-1} className="pt-20 focus:outline-none">
+            {children}
+          </main>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

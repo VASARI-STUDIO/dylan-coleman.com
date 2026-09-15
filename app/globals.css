@@ -227,3 +227,17 @@ html.lenis body {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* Backstop for motion that Framer doesn't own — CSS transitions, the marquee
+ * of any future component, smooth anchor scrolling. MotionConfig handles the
+ * React layer; this covers the rest. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -20,6 +20,16 @@ export function SmoothScroll() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Smooth scrolling is momentum applied to the viewport itself. For someone
+    // with a vestibular disorder that is precisely the motion they asked their
+    // system to suppress, so hand scrolling back to the browser entirely.
+    // Anchor offsetting is handled by CSS scroll-margin (scroll-mt-24 on each
+    // section), so same-page links still land correctly without Lenis.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.style.scrollBehavior = "auto";
+      return;
+    }
+
     const lenis = new Lenis({
       // Tightened from 0.1 → 0.08 for a more pronounced Studio Namma glide.
       lerp: 0.08,

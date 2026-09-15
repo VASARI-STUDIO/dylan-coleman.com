@@ -148,13 +148,16 @@ export function CaseStudyShell({
       {meta.metrics && meta.metrics.length > 0 && (
         <div className="border-t border-border/40">
           <FadeUp>
+            {/* flex-col-reverse keeps the value visually on top while the markup
+                stays dt-then-dd — a dd before its dt is an inverted
+                term/definition pair to anything reading the structure. */}
             <dl className="mx-auto grid max-w-page grid-cols-2 gap-y-10 gap-x-8 px-6 md:px-12 py-12 md:grid-cols-4 md:py-16">
               {meta.metrics.map((m) => (
-                <div key={m.label}>
+                <div key={m.label} className="flex flex-col-reverse">
+                  <dt className="smallcaps mt-2">{m.label}</dt>
                   <dd className="font-sans text-h3 font-medium tight-tracking">
                     {m.value}
                   </dd>
-                  <dt className="smallcaps mt-2">{m.label}</dt>
                 </div>
               ))}
             </dl>
@@ -288,7 +291,9 @@ export function CaseStudyShell({
         <section className="border-t border-border/40">
           <div className="mx-auto max-w-page px-6 md:px-12 py-16 md:py-24">
             <FadeUp>
-              <h2 className="smallcaps">See it running</h2>
+              {/* Eyebrow stays a paragraph — two sibling h2s for one section
+                  gave the outline a heading that isn't a section. */}
+              <p className="smallcaps">See it running</p>
               <h2 className="mt-6 font-sans text-h2 font-medium tight-tracking max-w-[20ch]">
                 Screenshots only go so far.
               </h2>
