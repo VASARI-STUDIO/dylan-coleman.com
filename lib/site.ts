@@ -1,7 +1,21 @@
 import { HERO_WORK } from "@/content/work";
 
-/** Canonical origin. Every absolute URL on the site derives from this. */
-export const SITE_URL = "https://dylan-coleman.com";
+/**
+ * Canonical origin. Every absolute URL on the site derives from this —
+ * canonicals, og:url, og:image, the sitemap, robots.txt's Host, and every
+ * JSON-LD @id.
+ *
+ * IT MUST MATCH THE HOST VERCEL ACTUALLY SERVES. Today the apex
+ * (dylan-coleman.com) 308-redirects to www, so www is the origin that returns
+ * 200 and www is what belongs here. Pointing this at the apex made every
+ * canonical on the site reference a redirect back to the page it was on.
+ *
+ * If you switch the primary domain in Vercel so www redirects to the apex
+ * instead, change this at the same time — or set NEXT_PUBLIC_SITE_URL and
+ * leave the code alone.
+ */
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.dylan-coleman.com";
 
 export const SITE_NAME = "Dylan Coleman";
 
