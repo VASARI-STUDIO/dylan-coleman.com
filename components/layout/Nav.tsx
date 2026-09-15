@@ -6,10 +6,13 @@ import { Mail, Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { SOCIALS } from "@/content/social";
 
+// Services and About point at the standalone pages, matching the footer —
+// the homepage sections are summaries, and those pages are the real thing.
+// Work stays an anchor: there is no separate work index, the homepage IS it.
 const links = [
   { label: "Work", href: "/#work" },
-  { label: "Services", href: "/#services" },
-  { label: "About", href: "/#about" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
 ];
 
 export function Nav() {
