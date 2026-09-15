@@ -99,6 +99,26 @@ html.lenis body {
 }
 
 @layer components {
+  /* Keyboard-only bypass to the main landmark. Off-screen until focused, then
+   * lands as a real button over the fixed header. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-160%);
+    padding: 0.65rem 1.1rem;
+    border-radius: 9999px;
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: transform 180ms ease;
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
   /* Body copy for the standalone content pages (services, about, privacy,
    * terms). Deliberately plain — these pages are read, not scanned. */
   .prose-page {
@@ -198,4 +218,12 @@ html.lenis body {
   .tight-tracking {
     letter-spacing: -0.02em;
   }
+}
+
+/* Focus ring. Keyboard users get a high-contrast halo that reads against both
+ * the black ground and the photography the header floats over. */
+:focus-visible {
+  outline: 2px solid hsl(var(--foreground));
+  outline-offset: 3px;
+  border-radius: 2px;
 }

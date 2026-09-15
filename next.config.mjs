@@ -1,5 +1,3 @@
-import createMDX from "@next/mdx";
-
 // Hosting: Vercel. GitHub is only the code host — there is no GitHub Pages
 // deploy, so the site always lives at the domain root and needs no basePath.
 // NEXT_PUBLIC_BASE_PATH stays as an escape hatch in case the site is ever
@@ -9,7 +7,6 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
-  pageExtensions: ["ts", "tsx", "md", "mdx"],
   reactStrictMode: true,
   trailingSlash: true,
   basePath,
@@ -20,6 +17,4 @@ const nextConfig = {
   },
 };
 
-const withMDX = createMDX({ extension: /\.mdx?$/ });
-
-export default withMDX(nextConfig);
+export default nextConfig;

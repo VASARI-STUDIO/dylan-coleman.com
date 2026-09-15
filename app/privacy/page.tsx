@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Privacy",
   description:
     "What this site collects, what it doesn't, and how to get in touch about your information.",
+  alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
 };
 

@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Terms",
   description:
     "How engagements run — quoting, payment, scope, ownership and warranty.",
+  alternates: { canonical: "/terms" },
   robots: { index: true, follow: true },
 };
 

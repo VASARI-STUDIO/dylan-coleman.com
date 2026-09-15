@@ -19,10 +19,12 @@ export async function generateMetadata({
   return {
     title: item.title,
     description: item.summary,
+    alternates: { canonical: `/work/${slug}` },
     openGraph: {
-      title: item.title,
+      title: `${item.title} — ${item.client}`,
       description: item.summary,
       type: "article",
+      url: `/work/${slug}`,
     },
   };
 }

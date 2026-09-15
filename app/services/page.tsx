@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Services",
   description:
     "Websites end-to-end, and brand and marketing design — how each engagement runs, what it produces, and what it doesn't include.",
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesPage() {

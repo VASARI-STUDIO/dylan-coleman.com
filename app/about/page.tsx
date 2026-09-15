@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Dylan Coleman — designer and developer in Brisbane, Australia. Brand and web work for businesses that need to be taken seriously.",
+  alternates: { canonical: "/about" },
 };
 
 const principles = [

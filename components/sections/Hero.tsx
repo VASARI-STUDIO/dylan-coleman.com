@@ -36,6 +36,14 @@ export function Hero() {
         className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-background via-background/40 to-transparent"
       />
 
+      {/* Matching bottom scrim. As the sequence blooms, the island lights up
+          exactly where the spec strip sits — without this the labels end up as
+          white text on sunlit grass. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-[32%] bg-gradient-to-t from-background via-background/60 to-transparent"
+      />
+
       {/* Hero content overlays the canvas */}
       <div className="relative z-10 mx-auto flex min-h-screen max-w-page flex-col items-center justify-between px-6 md:px-12 pt-28 md:pt-32 pb-10 md:pb-12 text-center">
         <div className="flex flex-col items-center">

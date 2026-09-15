@@ -58,6 +58,43 @@ function subdivisionOrder(n: number): number[] {
   return order;
 }
 
+/**
+ * How much of the sequence this visitor should actually download.
+ *
+ * The full run is ~3.9 MB. That is a fine trade on a desktop connection for a
+ * scroll-driven centrepiece, and an indefensible one on a phone on mobile data
+ * — which, for a Brisbane studio, is a large share of real traffic. So pick a
+ * stride: every Nth frame is fetched, and the painter interpolates across the
+ * gaps, which it has to do between any two frames anyway.
+ */
+function frameStride(): number {
+  if (typeof window === "undefined") return 1;
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return FRAME_COUNT; // ends only — the scrub is disabled anyway
+  }
+
+  const conn = (
+    navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }
+  ).connection;
+
+  if (conn?.saveData) return 8;
+  if (conn?.effectiveType && /(^|-)(2g|3g)$/.test(conn.effectiveType)) return 8;
+  if (window.innerWidth < 768) return 6;
+  if (window.innerWidth < 1280) return 3;
+  return 2;
+}
+
+/** Frame indices to fetch for a given stride. Always includes both ends. */
+function framesForStride(stride: number): number[] {
+  if (stride <= 1) return Array.from({ length: FRAME_COUNT }, (_, i) => i);
+  const set = new Set<number>([0, FRAME_COUNT - 1]);
+  for (let i = 0; i < FRAME_COUNT; i += stride) set.add(i);
+  return [...set].sort((a, b) => a - b);
+}
+
 export function HeroFrames({
   triggerRef,
 }: {
@@ -103,7 +140,8 @@ export function HeroFrames({
       });
 
     (async () => {
-      const order = subdivisionOrder(FRAME_COUNT);
+      const wanted = new Set(framesForStride(frameStride()));
+      const order = subdivisionOrder(FRAME_COUNT).filter((i) => wanted.has(i));
       if (!order.length) {
         setFirstFrameReady(true);
         markHeroReady();
@@ -148,12 +186,18 @@ export function HeroFrames({
 
     let lastDrawn = -1;
 
-    /** Nearest frame index that has actually loaded, searching outward. */
-    const nearestLoaded = (idx: number): number => {
-      if (loadedRef.current[idx]) return idx;
-      for (let d = 1; d < FRAME_COUNT; d++) {
-        if (loadedRef.current[idx - d]) return idx - d;
-        if (loadedRef.current[idx + d]) return idx + d;
+    /** Highest loaded index at or below `i`. */
+    const prevLoadedAt = (i: number): number => {
+      for (let k = Math.min(i, FRAME_COUNT - 1); k >= 0; k--) {
+        if (loadedRef.current[k]) return k;
+      }
+      return -1;
+    };
+
+    /** Lowest loaded index at or above `i`. */
+    const nextLoadedAt = (i: number): number => {
+      for (let k = Math.max(i, 0); k < FRAME_COUNT; k++) {
+        if (loadedRef.current[k]) return k;
       }
       return -1;
     };
@@ -194,14 +238,16 @@ export function HeroFrames({
     };
 
     const drawAt = (exact: number) => {
-      const wantA = Math.max(0, Math.min(FRAME_COUNT - 1, Math.floor(exact)));
-      const wantB = Math.max(0, Math.min(FRAME_COUNT - 1, wantA + 1));
-      const alpha = Math.max(0, Math.min(1, exact - wantA));
+      const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, exact));
 
-      // Fall back to the closest loaded neighbour while the sequence streams in.
-      const idxA = nearestLoaded(wantA);
-      if (idxA < 0) return;
-      const imgA = imagesRef.current[idxA];
+      // Interpolate between the two nearest LOADED frames rather than between
+      // exact neighbours. With a stride the exact next frame is usually absent,
+      // and blending across the real gap is what keeps a reduced sequence
+      // looking continuous instead of stepping.
+      let a = prevLoadedAt(Math.floor(clamped));
+      if (a < 0) a = nextLoadedAt(0);
+      if (a < 0) return;
+      const imgA = imagesRef.current[a];
       if (!imgA) return;
 
       const rect = canvas.getBoundingClientRect();
@@ -211,16 +257,15 @@ export function HeroFrames({
       ctx.globalAlpha = 1;
       ctx.drawImage(imgA, dX, dY, dW, dH);
 
-      // Blend the next frame at fractional alpha — sub-frame interpolation.
-      // Only blend when the exact next frame is present; blending against a
-      // far-away fallback would smear rather than interpolate.
-      const imgB = loadedRef.current[wantB]
-        ? imagesRef.current[wantB]
-        : undefined;
-      if (imgB && wantB !== idxA && alpha > 0.005) {
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(imgB, dX, dY, dW, dH);
-        ctx.globalAlpha = 1;
+      const b = nextLoadedAt(a + 1);
+      if (b > a) {
+        const imgB = imagesRef.current[b];
+        const t = (clamped - a) / (b - a);
+        if (imgB && t > 0.005) {
+          ctx.globalAlpha = Math.min(1, t);
+          ctx.drawImage(imgB, dX, dY, dW, dH);
+          ctx.globalAlpha = 1;
+        }
       }
     };
 
